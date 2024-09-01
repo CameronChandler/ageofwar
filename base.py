@@ -37,6 +37,9 @@ class Base(GameObject):
         self.zorder = 100
         self.budget = 10
 
+        self.training_queue = []
+        self.elapsed_training_time = None
+
     def take_damage(self, amount):
         self.health -= amount
 
@@ -50,14 +53,40 @@ class Base(GameObject):
         else:
             del minion
 
+    def try_enqueue(self, minion_class):
+        if self.budget >= minion_class.cost:
+            self.training_queue.append(minion_class)
+            self.budget -= minion_class.cost
+
     def _check_player_input(self, object_manager):
         for key in ['spawn_1', 'spawn_2', 'spawn_3']:
             if CONTROLS[self.player][key] in object_manager.pressed_keys:
-                self.try_spawn(object_manager, self.minion_choices[key](self.x, self.player))
+                minion_class = self.minion_choices[key]
+                self.try_enqueue(minion_class)
                 break
 
     def update(self, object_manager):
         self._check_player_input(object_manager)
+        self._process_training_queue(object_manager)
+
+    def _process_training_queue(self, object_manager):
+        if not self.training_queue:
+            return
+
+        if self.elapsed_training_time is None:
+            self.elapsed_training_time = 0
+
+        minion_class = self.training_queue[0]
+        self.elapsed_training_time += object_manager.delta
+        if self.elapsed_training_time >= minion_class.training_time:
+            object_manager.add_object(minion_class(self.x, self.player))
+            self.elapsed_training_time = None
+            self.training_queue.pop(0)
+
+    def create_minion(self, minion_class):
+        minion = minion_class(self.x, self.player)
+        # Replace with actual logic to add the minion to the game
+        print(f"Minion created: {minion}")
 
 class P1Base(Base):
     def __init__(self):
