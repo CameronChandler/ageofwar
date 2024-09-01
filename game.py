@@ -26,7 +26,7 @@ class ObjectManager:
         self.last_update_time = current_time
 
     def draw_objects(self, screen):
-        for obj in self.objects:
+        for obj in sorted(self.objects, key=lambda o: o.zorder):
             if obj.to_draw:
                 obj.draw(screen)
 
