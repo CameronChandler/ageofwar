@@ -7,6 +7,7 @@
         "background": "./assets/background.png",
         "base": "./assets/base.png",
         "minion1": "./assets/minion1.png",
-        "minion2": "./assets/minion2.png"
+        "minion2": "./assets/minion2.jpg",
+        "minion3": "./assets/minion3.png"
     }
 }

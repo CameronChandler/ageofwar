@@ -1,7 +1,7 @@
 import pygame
 import json
 from game_object import GameObject
-from minion import Test
+from minion import Test1, Test2, Test3
 
 with open('config.json', 'r') as file:
     config =  json.load(file)
@@ -15,7 +15,7 @@ CONTROLS = {
     2: {
         'spawn_1': pygame.K_COMMA,
         'spawn_2': pygame.K_PERIOD,
-        'spawn_3': pygame.K_BACKSLASH,
+        'spawn_3': pygame.K_SLASH,
     }
 }
 
@@ -23,6 +23,8 @@ BASE_WIDTH  = 100
 BASE_HEIGHT = 100
 
 class Base(GameObject):
+    max_queue_length = 5
+
     def __init__(self, player):
         super().__init__()
         self.player = player
@@ -33,18 +35,12 @@ class Base(GameObject):
         self.x = 0 if player == 1 else config['screen_width'] - BASE_WIDTH
         self.y = config['screen_height'] - BASE_HEIGHT - config['ground_height']
         self.rect.topleft = (self.x, self.y)
-        self.minion_choices = {'spawn_1': Test, 'spawn_2': Test, 'spawn_3': Test}
+        self.minion_choices = {'spawn_1': Test1, 'spawn_2': Test2, 'spawn_3': Test3}
         self.zorder = 100
         self.budget = 10
 
         self.training_queue = []
         self.elapsed_training_time = None
-
-    def take_damage(self, amount):
-        self.health -= amount
-
-    def is_destroyed(self):
-        return self.health <= 0
     
     def try_spawn(self, object_manager, minion):
         if self.budget >= minion.cost:
@@ -54,7 +50,7 @@ class Base(GameObject):
             del minion
 
     def try_enqueue(self, minion_class):
-        if self.budget >= minion_class.cost:
+        if self.budget >= minion_class.cost and len(self.training_queue) < self.max_queue_length:
             self.training_queue.append(minion_class)
             self.budget -= minion_class.cost
 

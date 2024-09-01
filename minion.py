@@ -41,33 +41,59 @@ class Minion(GameObject):
         self.x += self.speed * delta
         self.rect.x = self.x
 
-    def attack(self, target):
-        """Attack a target if within range (e.g., collision detection)."""
-        if self.rect.colliderect(target.rect):
-            target.take_damage(self.damage)
+    # def attack(self, target):
+    #     """Attack a target if within range (e.g., collision detection)."""
+    #     if self.rect.colliderect(target.rect):
+    #         target.take_damage(self.damage)
 
-    def take_damage(self, amount):
-        """Reduce the minion's health by the given amount."""
-        self.health -= amount
-        if self.health < 0:
-            self.health = 0
+    # def take_damage(self, amount):
+    #     """Reduce the minion's health by the given amount."""
+    #     self.health -= amount
+    #     if self.health < 0:
+    #         self.health = 0
 
-    def is_destroyed(self):
-        """Check if the minion is destroyed (health <= 0)."""
-        return self.health <= 0
+    # def is_destroyed(self):
+    #     """Check if the minion is destroyed (health <= 0)."""
+    #     return self.health <= 0
     
     def update(self, object_manager):
         self._move(object_manager.delta)
 
-class Test(Minion):
+class Test1(Minion):
     image_path = config['image']['minion1']
     image_size = (25, 50)
     health = 100
     speed = 100
     damage = 10
     cost = 1
-    name = 'Test'
+    name = 'Test1'
     training_time = 2
 
     def __init__(self, x: float, player: int):
-        super().__init__(x, Test.image_path, Test.image_size, player, Test.health, Test.speed, Test.damage)
+        super().__init__(x, Test1.image_path, Test1.image_size, player, Test1.health, Test1.speed, Test1.damage)
+
+class Test2(Minion):
+    image_path = config['image']['minion2']
+    image_size = (25, 50)
+    health = 100
+    speed = 100
+    damage = 10
+    cost = 1
+    name = 'Test2'
+    training_time = 2
+
+    def __init__(self, x: float, player: int):
+        super().__init__(x, Test2.image_path, Test2.image_size, player, Test2.health, Test2.speed, Test2.damage)
+
+class Test3(Minion):
+    image_path = config['image']['minion3']
+    image_size = (25, 50)
+    health = 100
+    speed = 100
+    damage = 10
+    cost = 1
+    name = 'Test3'
+    training_time = 2
+
+    def __init__(self, x: float, player: int):
+        super().__init__(x, Test3.image_path, Test3.image_size, player, Test3.health, Test3.speed, Test3.damage)
