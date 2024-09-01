@@ -35,17 +35,25 @@ class Base(GameObject):
         self.rect.topleft = (self.x, self.y)
         self.minion_choices = {'spawn_1': Test, 'spawn_2': Test, 'spawn_3': Test}
         self.zorder = 100
+        self.budget = 10
 
     def take_damage(self, amount):
         self.health -= amount
 
     def is_destroyed(self):
         return self.health <= 0
+    
+    def try_spawn(self, object_manager, minion):
+        if self.budget >= minion.cost:
+            object_manager.add_object(minion)
+            self.budget -= minion.cost
+        else:
+            del minion
 
     def _check_player_input(self, object_manager):
         for key in ['spawn_1', 'spawn_2', 'spawn_3']:
             if CONTROLS[self.player][key] in object_manager.pressed_keys:
-                object_manager.add_object(self.minion_choices[key](self.x, self.y + BASE_HEIGHT, self.player))
+                self.try_spawn(object_manager, self.minion_choices[key](self.x, self.player))
                 break
 
     def update(self, object_manager):

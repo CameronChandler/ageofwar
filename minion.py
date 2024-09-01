@@ -6,14 +6,14 @@ with open('config.json', 'r') as file:
     config =  json.load(file)
 
 class Minion(GameObject):
-    def __init__(self, x, y, image_path, image_size, player, health, speed, damage):
+    def __init__(self, x, image_path, image_size, player, health, speed, damage):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''
         self.player = player
         
         self.image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(self.image, (image_size[0], image_size[1]))
 
-        self.x, self.y = x, y - image_size[1]
+        self.x, self.y = x, config['screen_height'] - config['ground_height'] - image_size[1]
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
         self.health = health
         self.damage = damage
@@ -23,6 +23,18 @@ class Minion(GameObject):
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
 
         super().__init__()
+
+    @property
+    def name():
+        raise NotImplementedError
+
+    @property
+    def cost():
+        raise NotImplementedError
+
+    @property
+    def training_time():
+        raise NotImplementedError
 
     def _move(self, delta):
         """Move the minion forwards (to the right) by its speed."""
@@ -53,6 +65,9 @@ class Test(Minion):
     health = 100
     speed = 100
     damage = 10
+    cost = 1
+    name = 'Test'
+    training_time = 2
 
-    def __init__(self, x: float, y: float, player: int):
-        super().__init__(x, y, Test.image_path, Test.image_size, player, Test.health, Test.speed, Test.damage)
+    def __init__(self, x: float, player: int):
+        super().__init__(x, Test.image_path, Test.image_size, player, Test.health, Test.speed, Test.damage)
