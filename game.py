@@ -10,6 +10,7 @@ class ObjectManager:
     def __init__(self):
         self.objects = []
         self.last_update_time = pygame.time.get_ticks()
+        self.pressed_keys = set()
 
     def add_object(self, obj):
         self.objects.append(obj)
@@ -19,9 +20,9 @@ class ObjectManager:
 
     def update_objects(self):
         current_time = pygame.time.get_ticks()
-        delta = (current_time - self.last_update_time) / 1_000 # seconds
+        self.delta = (current_time - self.last_update_time) / 1_000 # seconds
         for obj in self.objects:
-            obj.update(self, delta)
+            obj.update(self)
         self.last_update_time = current_time
 
     def draw_objects(self, screen):
@@ -50,9 +51,15 @@ class Game:
     def run(self):
         running = True
         while running:
+            pressed_keys = set()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+
+                if event.type == pygame.KEYDOWN:
+                    pressed_keys.add(event.key)
+
+            self.object_manager.pressed_keys = pressed_keys
 
             self.screen.blit(self.background_image, (0, 0))
             self.object_manager.update_objects()

@@ -33,7 +33,7 @@ class Base(GameObject):
         self.x = 0 if player == 1 else config['screen_width'] - BASE_WIDTH
         self.y = config['screen_height'] - BASE_HEIGHT - config['ground_height']
         self.rect.topleft = (self.x, self.y)
-        self.minions = []
+        self.minion_choices = {'spawn_1': Test, 'spawn_2': Test, 'spawn_3': Test}
 
     def take_damage(self, amount):
         self.health -= amount
@@ -41,15 +41,14 @@ class Base(GameObject):
     def is_destroyed(self):
         return self.health <= 0
 
-    def _check_player_input(self, object_manager, delta):
-        keys = pygame.key.get_pressed()
-        if keys[CONTROLS[self.player]['spawn_1']]:
-            object_manager.add_object(Test(self.x, self.y - BASE_HEIGHT, self.player))
-        elif keys[CONTROLS[self.player]['spawn_2']]:
-            pass
+    def _check_player_input(self, object_manager):
+        for key in ['spawn_1', 'spawn_2', 'spawn_3']:
+            if CONTROLS[self.player][key] in object_manager.pressed_keys:
+                object_manager.add_object(self.minion_choices[key](self.x, self.y - BASE_HEIGHT, self.player))
+                break
 
-    def update(self, object_manager, delta):
-        self._check_player_input(object_manager, delta)
+    def update(self, object_manager):
+        self._check_player_input(object_manager)
 
 class P1Base(Base):
     def __init__(self):

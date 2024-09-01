@@ -8,21 +8,26 @@ with open('config.json', 'r') as file:
 class Minion(GameObject):
     def __init__(self, x, y, image_path, image_size, player, health, speed, damage):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''
-        self.direction = 1 if player == 1 else -1
+        self.player = player
+        
         self.image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(self.image, (self.direction*image_size[0], image_size[1]))
+        self.image = pygame.transform.scale(self.image, (image_size[0], image_size[1]))
+
         self.x, self.y = x, y - image_size[1]
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
         self.health = health
-        self.speed = speed
         self.damage = damage
+
+        if self.player == 2:
+            self.speed = -speed
+            self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
+
         super().__init__()
 
     def _move(self, delta):
         """Move the minion forwards (to the right) by its speed."""
         self.x += self.speed * delta
         self.rect.x = self.x
-        print(self.rect.x, self.x, delta)
 
     def attack(self, target):
         """Attack a target if within range (e.g., collision detection)."""
@@ -39,8 +44,8 @@ class Minion(GameObject):
         """Check if the minion is destroyed (health <= 0)."""
         return self.health <= 0
     
-    def update(self, object_manager, delta):
-        self._move(delta)
+    def update(self, object_manager):
+        self._move(object_manager.delta)
 
 class Test(Minion):
     image_path = config['image']['minion1']

@@ -5,5 +5,5 @@ class GameObject:
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def update(self, game, delta):
+    def update(self, object_manager):
         ...
