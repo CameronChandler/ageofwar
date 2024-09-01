@@ -87,7 +87,7 @@ class Test2(Minion):
 
 class Test3(Minion):
     image_path = config['image']['minion3']
-    image_size = (25, 50)
+    image_size = (50, 50)
     health = 100
     speed = 100
     damage = 10
