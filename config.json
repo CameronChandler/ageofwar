@@ -2,5 +2,11 @@
     "screen_width": 2000,
     "screen_height": 600,
     "base_health": 100,
-    "ground_height": 30
+    "ground_height": 30,
+    "image": {
+        "background": "./assets/background.png",
+        "base": "./assets/base.png",
+        "minion1": "./assets/minion1.png",
+        "minion2": "./assets/minion2.png"
+    }
 }
