@@ -1,4 +1,5 @@
 {
+    "debug": true,
     "screen_width": 1700,
     "screen_height": 600,
     "base_health": 100,

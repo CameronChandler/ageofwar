@@ -25,7 +25,7 @@ Sounds
 
 UI
 - UI shows unit images
-- Display training queue
+X Display training queue
 
 Turrets
 - Add UI for selecting and buying turrets

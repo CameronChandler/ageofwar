@@ -22,6 +22,9 @@ class Minion(GameObject):
             self.speed = -speed
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
 
+        self.moving = True
+        self.obstacle = None
+
         super().__init__()
 
     @property
@@ -41,6 +44,22 @@ class Minion(GameObject):
         self.x += self.speed * delta
         self.rect.x = self.x
 
+    def detect_obstacle(self, object_manager):
+        """Detect if there is an enemy or a older friendly minion in front of this minion"""
+        # Iterating through list backwards to detect minions first (bases are at front of list)
+        for obj in object_manager.objects[::-1]:
+            if obj.rect.colliderect(self.rect.inflate(0, 0)):
+                if self.player != obj.player:
+                    self.obstacle = obj
+                    return True
+                
+                elif isinstance(obj, Minion) and obj != self:
+                    self.obstacle = obj
+                    return True
+
+        self.obstacle = None
+        return False
+
     # def attack(self, target):
     #     """Attack a target if within range (e.g., collision detection)."""
     #     if self.rect.colliderect(target.rect):
@@ -57,7 +76,10 @@ class Minion(GameObject):
     #     return self.health <= 0
     
     def update(self, object_manager):
-        self._move(object_manager.delta)
+        self.moving = not self.detect_obstacle(object_manager)
+
+        if self.moving:
+            self._move(object_manager.delta)
 
 class Test1(Minion):
     image_path = config['image']['minion1']

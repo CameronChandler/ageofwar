@@ -19,6 +19,10 @@ CONTROLS = {
     }
 }
 
+MINION_CHOICES = {
+    0: {'spawn_1': Test1, 'spawn_2': Test2, 'spawn_3': Test3},
+}
+
 BASE_WIDTH  = 100
 BASE_HEIGHT = 100
 
@@ -35,12 +39,16 @@ class Base(GameObject):
         self.x = 0 if player == 1 else config['screen_width'] - BASE_WIDTH
         self.y = config['screen_height'] - BASE_HEIGHT - config['ground_height']
         self.rect.topleft = (self.x, self.y)
-        self.minion_choices = {'spawn_1': Test1, 'spawn_2': Test2, 'spawn_3': Test3}
         self.zorder = 100
         self.budget = 10
+        self.evolution = 0
 
         self.training_queue = []
         self.elapsed_training_time = 0
+
+    @property
+    def minion_choices(self):
+        return MINION_CHOICES[self.evolution]
     
     def try_spawn(self, object_manager, minion):
         if self.budget >= minion.cost:
