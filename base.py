@@ -40,7 +40,7 @@ class Base(GameObject):
         self.budget = 10
 
         self.training_queue = []
-        self.elapsed_training_time = None
+        self.elapsed_training_time = 0
     
     def try_spawn(self, object_manager, minion):
         if self.budget >= minion.cost:
@@ -69,20 +69,25 @@ class Base(GameObject):
         if not self.training_queue:
             return
 
-        if self.elapsed_training_time is None:
-            self.elapsed_training_time = 0
-
         minion_class = self.training_queue[0]
         self.elapsed_training_time += object_manager.delta
         if self.elapsed_training_time >= minion_class.training_time:
             object_manager.add_object(minion_class(self.x, self.player))
-            self.elapsed_training_time = None
+            self.elapsed_training_time = 0
             self.training_queue.pop(0)
 
     def create_minion(self, minion_class):
         minion = minion_class(self.x, self.player)
         # Replace with actual logic to add the minion to the game
         print(f"Minion created: {minion}")
+
+    def get_training_queue_status(self) -> tuple[int, float]:
+        queue_length = len(self.training_queue)
+        current_progress = 0
+        if queue_length > 0:
+            current_minion_class = self.training_queue[0]
+            current_progress = self.elapsed_training_time / current_minion_class.training_time
+        return queue_length, queue_progress
 
 class P1Base(Base):
     def __init__(self):
