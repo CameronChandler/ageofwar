@@ -1,0 +1,34 @@
+Evolution
+- Button to evolve
+- New minion groups
+- Evolve button glows with sufficient XP
+
+Damage
+- Minions stop before enemies
+- Minions attack enemies
+- Minions deal Damage
+- Minions die with no health
+- Killing minions grants other player money and xp
+- Bases have health that displays
+
+Main Menu
+- Controls
+- Title Screen
+- Pause functionality
+
+Sounds
+- attack
+- Spawn
+- Victory
+- Music
+- Shin-kicker?
+
+UI
+- UI shows unit images
+- Display training queue
+
+Turrets
+- Add UI for selecting and buying turrets
+- Each player has X turret spots, UI shows X gaps for upgrading turrets
+    - In age Y player can upgrade spot x to turret Y
+    - Hit space or enter to upgrade turret
