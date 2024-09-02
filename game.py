@@ -19,7 +19,8 @@ class ObjectManager:
     def remove_object(self, obj):
         self.objects.remove(obj)
 
-    def update_objects(self):
+    def update_objects(self, pressed_keys: set):
+        self.pressed_keys = pressed_keys
         current_time = pygame.time.get_ticks()
         self.delta = (current_time - self.last_update_time) / 1_000 # seconds
         for obj in self.objects:
@@ -66,26 +67,20 @@ class UI:
         pygame.draw.rect(self.screen, Color.WHITE, loading_bar_rect)
 
     def draw_training_queues(self):
-        # Dimensions and positioning
         total_length = 150
         height = 20
 
-        # Player 1 Queue Position
         p1_x = 10
         p1_y = 50 
 
-        # Player 2 Queue Position
         p2_x = self.screen_width - total_length - 10
         p2_y = 50
 
-        # Draw P1 Training Queue
         queue_length, queue_progress = self.bases[1].get_training_queue_status()
         self.draw_training_queue(queue_length, queue_progress, p1_x, p1_y, total_length, height)
 
-        # Draw P2 Training Queue
         queue_length, queue_progress = self.bases[2].get_training_queue_status()
         self.draw_training_queue(queue_length, queue_progress, p2_x, p2_y, total_length, height)
-
 
     def draw(self):
         self.draw_budget()
@@ -123,10 +118,8 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     pressed_keys.add(event.key)
 
-            self.object_manager.pressed_keys = pressed_keys
-
             self.screen.blit(self.background_image, (0, 0))
-            self.object_manager.update_objects()
+            self.object_manager.update_objects(pressed_keys)
             self.object_manager.draw_objects(self.screen)
             self.ui.draw()
 
