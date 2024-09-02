@@ -83,10 +83,10 @@ class Base(GameObject):
 
     def get_training_queue_status(self) -> tuple[int, float]:
         queue_length = len(self.training_queue)
-        current_progress = 0
+        queue_progress = 0
         if queue_length > 0:
             current_minion_class = self.training_queue[0]
-            current_progress = self.elapsed_training_time / current_minion_class.training_time
+            queue_progress = self.elapsed_training_time / current_minion_class.training_time
         return queue_length, queue_progress
 
 class P1Base(Base):
