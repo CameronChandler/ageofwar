@@ -2,6 +2,7 @@ import pygame
 import json
 from base import Base, P1Base, P2Base
 from constants import Color
+from game_object import HealthMixin
 
 with open('config.json', 'r') as file:
     config =  json.load(file)
@@ -27,14 +28,28 @@ class ObjectManager:
         self.delta = (current_time - self.last_update_time) / 1_000 # seconds
         for obj in self.objects:
             obj.update(self)
+            if isinstance(obj, HealthMixin) and obj.health <= 0:
+                self.handle_death(obj)
+
         self.last_update_time = current_time
+
+    def handle_death(self, obj):
+        """Handle the death of an object, including removal and player rewards."""
+        self.remove_object(obj)
+
+        other_player = {1: 2, 2: 1}[obj.player]
+
+        self.reward_player(other_player, 1)#obj.reward)
+
+    def reward_player(self, player, reward):
+        pass
 
     def draw_objects(self, screen):
         for obj in sorted(self.objects, key=lambda o: o.zorder):
             if obj.to_draw:
                 obj.draw(screen)
 
-                if hasattr(obj, 'health'):
+                if isinstance(obj, HealthMixin):
                     obj.draw_health_bar(screen)
 
                 if DEBUG:
