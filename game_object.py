@@ -25,7 +25,7 @@ class GameObject:
          # Red rectangle with a 2-pixel border
         pygame.draw.rect(screen, Color.RED, self.collision_rect, 2)
 
-class HealthBarMixin:
+class HealthMixin:
 
     def __init__(self):
         self.max_health = self.health = None
@@ -37,10 +37,18 @@ class HealthBarMixin:
         health_ratio = self.health / self.max_health
         green_width = int(bar_width * health_ratio)
 
-        # Define positions for the health bar
         bar_x = self.x
-        bar_y = self.y - 10  # 10 pixels above the minion
+        bar_y = self.y - 10  # 10 pixels above the object
 
-        # Draw the green (current health) and red (lost health) parts of the bar
-        pygame.draw.rect(screen, Color.RED, (bar_x, bar_y, bar_width, bar_height))  # Red background
-        pygame.draw.rect(screen, Color.GREEN, (bar_x, bar_y, green_width, bar_height))  # Green foreground
+        pygame.draw.rect(screen, Color.RED  , (bar_x, bar_y,   bar_width, bar_height))
+        pygame.draw.rect(screen, Color.GREEN, (bar_x, bar_y, green_width, bar_height))
+
+    def take_damage(self, damage):
+        """Reduce the minion's health by the given damage"""
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+
+    def is_destroyed(self):
+        """Check if the minion is destroyed (health <= 0)."""
+        return self.health <= 0

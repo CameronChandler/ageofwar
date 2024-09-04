@@ -9,7 +9,7 @@ X Minions stop before enemies
 - Minions deal Damage
 - Minions die with no health
 - Killing minions grants other player money and xp
-- Bases have health that displays
+X Bases have health that displays
 
 Main Menu
 - Controls
