@@ -61,6 +61,18 @@ class ObjectManager:
                 if DEBUG:
                     obj.draw_collision_rect(screen)
 
+# class Box:
+#     def __init__(self, x, y, player):
+#         self.x = x
+#         self.y = y
+#         self.player = player
+#         self.rect = pygame.Rect(x, y, 50, 50)  # Adjust size as needed
+#         self.selected = False
+
+#     def draw(self, screen):
+#         color = Color.YELLOW if self.selected else Color.GREY
+#         pygame.draw.rect(screen, color, self.rect, 2)
+
 class UI:
 
     def __init__(self, bases, screen, screen_width, screen_height):
@@ -70,6 +82,39 @@ class UI:
         self.screen_height = screen_height
 
         self.font = pygame.font.Font(None, 36)
+
+        # self.boxes = {
+        #     1: [Box(100 +                     i * 60     , self.screen_height - 100, 1) for i in range(3)],
+        #     2: [Box(self.screen_width - 100 - i * 60 - 50, self.screen_height - 100, 2) for i in range(3)]
+        # }
+
+        # self.selected_boxes = {1: 0, 2: 0}
+
+    def draw_minion_choices(self):
+        for player in (1, 2):
+            minion_choices = list(self.bases[player].minion_choices.values())
+            box_width = 50
+            padding = 20
+            
+            for i, minion_type in enumerate(minion_choices):
+                image = pygame.image.load(minion_type.image_path)
+                rect = image.get_rect(topleft=(0, 0))
+                original_length = max(rect.width, rect.height)
+                new_size = (
+                    (0.8 * box_width * rect.width ) // original_length,
+                    (0.8 * box_width * rect.height) // original_length
+                )
+
+                image = pygame.transform.scale(image, new_size)
+                x = 380
+                offset = (x if player == 1 else self.screen_width - x - len(minion_choices)*(box_width + padding))
+                box_x = offset + i*(box_width + padding)
+                box_y = 10
+                image_x = box_x + (box_width - new_size[0]) // 2
+                image_y = box_y + (box_width - new_size[1]) // 2
+                self.screen.blit(image, (image_x, image_y))
+
+                pygame.draw.rect(self.screen, Color.GREY, (box_x, box_y, box_width, box_width), 4)
 
     def draw_budget(self):
         x_pos = 50
@@ -124,6 +169,7 @@ class UI:
     def draw(self):
         self.draw_budget()
         self.draw_xp()
+        self.draw_minion_choices()
         self.draw_training_queues()
 
 class Game:
