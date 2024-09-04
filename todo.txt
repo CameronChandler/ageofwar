@@ -1,7 +1,5 @@
 Evolution
-- Button to evolve
 - New minion groups
-- Evolve button glows with sufficient XP
 
 Damage
 X Minions stop before enemies
@@ -24,11 +22,24 @@ Sounds
 - Shin-kicker?
 
 UI
-- UI shows unit images
+X UI shows unit images
 X Display training queue
+- Display Turret/Evolve/Power options
+- Select Options
+- Evolve button glows with sufficient XP
+[Evolve] [Turret 1] -> Could have these expand with options when hovered over
+[Power ] [Turret 2]
+         [Turret 3]
 
 Turrets
+- Fire projectiles at nearest target in range
+- Rotate to track nearest target and shoot
+- Egg launcher
+- Crossbow
+- Machine gun!
+- Laser beam
 - Add UI for selecting and buying turrets
 - Each player has X turret spots, UI shows X gaps for upgrading turrets
     - In age Y player can upgrade spot x to turret Y
     - Hit space or enter to upgrade turret
+
