@@ -4,7 +4,7 @@ Evolution
 - Evolve button glows with sufficient XP
 
 Damage
-- Minions stop before enemies
+X Minions stop before enemies
 - Minions attack enemies
 - Minions deal Damage
 - Minions die with no health

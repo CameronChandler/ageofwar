@@ -34,6 +34,9 @@ class ObjectManager:
             if obj.to_draw:
                 obj.draw(screen)
 
+                if hasattr(obj, 'health'):
+                    obj.draw_health_bar(screen)
+
                 if DEBUG:
                     obj.draw_collision_rect(screen)
 

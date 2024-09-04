@@ -1,11 +1,11 @@
 import pygame
-from game_object import GameObject
+from game_object import GameObject, HealthBarMixin
 import json
 
 with open('config.json', 'r') as file:
     config =  json.load(file)
 
-class Minion(GameObject):
+class Minion(GameObject, HealthBarMixin):
     inflate_pixels = 30
 
     def __init__(self, x, image_path, image_size, player, health, speed, damage):
@@ -17,7 +17,7 @@ class Minion(GameObject):
 
         self.x, self.y = x, config['screen_height'] - config['ground_height'] - image_size[1]
         self.rect = self.image.get_rect(topleft=(self.x, self.y))
-        self.health = health
+        self.max_health = self.health = health
         self.damage = damage
 
         if self.player == 2:

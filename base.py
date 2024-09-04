@@ -1,6 +1,6 @@
 import pygame
 import json
-from game_object import GameObject
+from game_object import GameObject, HealthBarMixin
 from minion import Test1, Test2, Test3
 
 with open('config.json', 'r') as file:
@@ -26,14 +26,14 @@ MINION_CHOICES = {
 BASE_WIDTH  = 100
 BASE_HEIGHT = 100
 
-class Base(GameObject):
+class Base(GameObject, HealthBarMixin):
     max_queue_length = 5
     inflate_pixels = 70
 
     def __init__(self, player):
         super().__init__()
         self.player = player
-        self.health = config['base_health']
+        self.max_health = self.health = config['base_health']
         self.image = pygame.image.load(config['image']['base'])
         self.image = pygame.transform.scale(self.image, (BASE_WIDTH, BASE_HEIGHT))
         self.rect = self.image.get_rect()
