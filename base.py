@@ -42,6 +42,7 @@ class Base(GameObject, HealthMixin):
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
         self.budget = 10
+        self.xp = 0
         self.evolution = 0
 
         self.training_queue = []

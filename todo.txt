@@ -5,9 +5,9 @@ Evolution
 
 Damage
 X Minions stop before enemies
-- Minions attack enemies
-- Minions deal Damage
-- Minions die with no health
+X Minions attack enemies
+X Minions deal Damage
+X Minions die with no health
 - Killing minions grants other player money and xp
 X Bases have health that displays
 

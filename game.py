@@ -11,8 +11,13 @@ DEBUG = config['debug']
 
 class ObjectManager:
 
-    def __init__(self):
+    def __init__(self, bases):
         self.objects = []
+
+        self.bases = bases
+        self.add_object(self.bases[1])
+        self.add_object(self.bases[2])
+
         self.last_update_time = pygame.time.get_ticks()
         self.pressed_keys = set()
 
@@ -39,10 +44,11 @@ class ObjectManager:
 
         other_player = {1: 2, 2: 1}[obj.player]
 
-        self.reward_player(other_player, 1)#obj.reward)
+        self.reward_player(other_player, obj.reward_xp, obj.reward_cash)
 
-    def reward_player(self, player, reward):
-        pass
+    def reward_player(self, player, xp, cash):
+        self.bases[player].xp     += xp
+        self.bases[player].budget += cash
 
     def draw_objects(self, screen):
         for obj in sorted(self.objects, key=lambda o: o.zorder):
@@ -66,12 +72,22 @@ class UI:
         self.font = pygame.font.Font(None, 36)
 
     def draw_budget(self):
-        budget_text_p1 = self.font.render(f'P1 Budget: ${self.bases[1].budget}', True, Color.WHITE)
-        self.screen.blit(budget_text_p1, (10, 10))
+        x_pos = 50
+        budget_text_p1 = self.font.render(f'Budget: ${self.bases[1].budget}', True, Color.WHITE)
+        self.screen.blit(budget_text_p1, (x_pos, 10))
 
-        budget_text_p2 = self.font.render(f'P2 Budget: ${self.bases[2].budget}', True, Color.WHITE)
-        text_rect = budget_text_p2.get_rect(topright=(self.screen_width - 10, 10))
+        budget_text_p2 = self.font.render(f'Budget: ${self.bases[2].budget}', True, Color.WHITE)
+        text_rect = budget_text_p2.get_rect(topright=(self.screen_width - x_pos, 10))
         self.screen.blit(budget_text_p2, text_rect)
+
+    def draw_xp(self):
+        x_pos = 250
+        xp_text_p1 = self.font.render(f'XP: {self.bases[1].xp}', True, Color.WHITE)
+        self.screen.blit(xp_text_p1, (x_pos, 10))
+
+        xp_text_p2 = self.font.render(f'XP: {self.bases[2].xp}', True, Color.WHITE)
+        text_rect = xp_text_p2.get_rect(topright=(self.screen_width - x_pos, 10))
+        self.screen.blit(xp_text_p2, text_rect)
 
     def draw_training_queue(self, queue_length, queue_progress, x, y, total_length, height):
         edge_width = 4
@@ -107,6 +123,7 @@ class UI:
 
     def draw(self):
         self.draw_budget()
+        self.draw_xp()
         self.draw_training_queues()
 
 class Game:
@@ -119,10 +136,8 @@ class Game:
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Age of War')
 
-        self.object_manager = ObjectManager()
         self.bases = {1: P1Base(), 2: P2Base()}
-        self.object_manager.add_object(self.bases[1])
-        self.object_manager.add_object(self.bases[2])
+        self.object_manager = ObjectManager(self.bases)
 
         self.background_image = pygame.transform.scale(
             pygame.image.load(config['image']['background']), (self.screen_width, self.screen_height)
