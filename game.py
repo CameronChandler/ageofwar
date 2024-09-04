@@ -6,6 +6,8 @@ from constants import Color
 with open('config.json', 'r') as file:
     config =  json.load(file)
 
+DEBUG = config['debug']
+
 class ObjectManager:
 
     def __init__(self):
@@ -31,6 +33,9 @@ class ObjectManager:
         for obj in sorted(self.objects, key=lambda o: o.zorder):
             if obj.to_draw:
                 obj.draw(screen)
+
+                if DEBUG:
+                    obj.draw_collision_rect(screen)
 
 class UI:
 

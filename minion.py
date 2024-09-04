@@ -6,6 +6,8 @@ with open('config.json', 'r') as file:
     config =  json.load(file)
 
 class Minion(GameObject):
+    inflate_pixels = 30
+
     def __init__(self, x, image_path, image_size, player, health, speed, damage):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''
         self.player = player
@@ -48,7 +50,7 @@ class Minion(GameObject):
         """Detect if there is an enemy or a older friendly minion in front of this minion"""
         # Iterating through list backwards to detect minions first (bases are at front of list)
         for obj in object_manager.objects[::-1]:
-            if obj.rect.colliderect(self.rect.inflate(0, 0)):
+            if obj.collision_rect.colliderect(self.collision_rect):
                 if self.player != obj.player:
                     self.obstacle = obj
                     return True

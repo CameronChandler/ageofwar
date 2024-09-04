@@ -28,6 +28,7 @@ BASE_HEIGHT = 100
 
 class Base(GameObject):
     max_queue_length = 5
+    inflate_pixels = 70
 
     def __init__(self, player):
         super().__init__()
