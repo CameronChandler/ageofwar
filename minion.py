@@ -45,14 +45,6 @@ class Minion(GameObject, HealthMixin):
     def attack_interval():
         raise NotImplementedError
 
-    @property
-    def reward_xp():
-        raise NotImplementedError
-
-    @property
-    def reward_cash():
-        raise NotImplementedError
-
     def _move(self, delta):
         """Move the minion forwards (to the right) by its speed."""
         self.x += self.speed * delta

@@ -29,6 +29,8 @@ BASE_HEIGHT = 100
 class Base(GameObject, HealthMixin):
     max_queue_length = 5
     inflate_pixels = 70
+    reward_xp = 1e6
+    reward_cash = 1e6
 
     def __init__(self, player):
         super().__init__()
@@ -37,7 +39,9 @@ class Base(GameObject, HealthMixin):
         self.image = pygame.image.load(config['image']['base'])
         self.image = pygame.transform.scale(self.image, (BASE_WIDTH, BASE_HEIGHT))
         self.rect = self.image.get_rect()
-        self.x = 0 if player == 1 else config['screen_width'] - BASE_WIDTH
+
+        offset = 10
+        self.x = offset if player == 1 else config['screen_width'] - BASE_WIDTH - offset
         self.y = config['screen_height'] - BASE_HEIGHT - config['ground_height']
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
@@ -82,12 +86,9 @@ class Base(GameObject, HealthMixin):
         minion_class = self.training_queue[0]
         self.elapsed_training_time += object_manager.delta
         if self.elapsed_training_time >= minion_class.training_time:
-            object_manager.add_object(minion_class(self.x, self.player))
+            object_manager.add_object(minion_class(self.x + BASE_WIDTH/2, self.player))
             self.elapsed_training_time = 0
             self.training_queue.pop(0)
-
-    def create_minion(self, minion_class):
-        minion = minion_class(self.x, self.player)
 
     def get_training_queue_status(self) -> tuple[int, float]:
         queue_length = len(self.training_queue)
