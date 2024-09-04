@@ -55,6 +55,10 @@ class Minion(GameObject, HealthMixin):
         # Iterating through list backwards to detect minions first (bases are at front of list)
         for obj in object_manager.objects[::-1]:
             if obj.collision_rect.colliderect(self.collision_rect):
+                is_in_front = (self.player == 1 and obj.x > self.x) or (self.player == 2 and obj.x < self.x)
+                if not is_in_front:
+                    continue
+
                 if self.player != obj.player:
                     return obj
                 

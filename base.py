@@ -87,8 +87,6 @@ class Base(GameObject, HealthMixin):
 
     def create_minion(self, minion_class):
         minion = minion_class(self.x, self.player)
-        # Replace with actual logic to add the minion to the game
-        print(f"Minion created: {minion}")
 
     def get_training_queue_status(self) -> tuple[int, float]:
         queue_length = len(self.training_queue)
