@@ -3,6 +3,7 @@ import json
 from base import Base, P1Base, P2Base
 from constants import Color
 from game_object import HealthMixin
+from enum import Enum
 
 with open('config.json', 'r') as file:
     config =  json.load(file)
@@ -11,6 +12,15 @@ DEBUG = config['debug']
 
 P1_KEYS = {'up': pygame.K_w , 'down': pygame.K_s   , 'left': pygame.K_a   , 'right': pygame.K_d}
 P2_KEYS = {'up': pygame.K_UP, 'down': pygame.K_DOWN, 'left': pygame.K_LEFT, 'right': pygame.K_RIGHT}
+
+class BoxAction(Enum):
+    EVOLVE = 'Evolve'
+    POWER = 'Power'
+    TURRET_1 = 'Turret 1'
+    TURRET_2 = 'Turret 2'
+
+    def __get__(self, instance, owner):
+        return self.value
 
 
 class ObjectManager:
@@ -31,7 +41,10 @@ class ObjectManager:
     def remove_object(self, obj):
         self.objects.remove(obj)
 
-    def update_objects(self, pressed_keys: set, ui_selections: list):
+    def handle_ui_selections(self, ui_selections: list[tuple[int, BoxAction]]):
+        [print(i) for i in ui_selections]
+
+    def update_objects(self, pressed_keys: set, ui_selections: list[tuple[int, BoxAction]]):
         self.pressed_keys = pressed_keys
         current_time = pygame.time.get_ticks()
         self.delta = (current_time - self.last_update_time) / 1_000 # seconds
@@ -41,6 +54,8 @@ class ObjectManager:
                 self.handle_death(obj)
 
         self.last_update_time = current_time
+
+        self.handle_ui_selections(ui_selections)
 
     def handle_death(self, obj):
         """Handle the death of an object, including removal and player rewards."""
@@ -66,20 +81,24 @@ class ObjectManager:
                     obj.draw_collision_rect(screen)
 
 class Box:
-    def __init__(self, x, y, label):
+    size = 80
+    padding = 30
+    
+    def __init__(self, x, y, action, player):
         self.x = x
         self.y = y
-        self.label = label
-        self.rect = pygame.Rect(x, y, 60, 60)
+        self.action = action
+        self.player = player
+        self.rect = pygame.Rect(x, y, self.size, self.size)
         self.selected = False
 
     def draw(self, screen):
         color = Color.YELLOW if self.selected else Color.GREY
         pygame.draw.rect(screen, color, self.rect, 4)
-        font = pygame.font.Font(None, 36)
-        label_text = font.render(self.label, True, Color.WHITE)
-        label_rect = label_text.get_rect(center=self.rect.center)
-        screen.blit(label_text, label_rect)
+        font = pygame.font.Font(None, 24)
+        action_text = font.render(self.action, True, Color.WHITE)
+        action_rect = action_text.get_rect(center=self.rect.center)
+        screen.blit(action_text, action_rect)
 
 class UI:
 
@@ -92,13 +111,17 @@ class UI:
         self.font = pygame.font.Font(None, 36)
 
         # Create 2x2 grids of boxes for each player
+        x1, x2 = Box.padding, 2*Box.padding + Box.size
+        y1 = 100
+        y2 = y1 + Box.padding + Box.size
         self.boxes_p1 = [
-            [Box(50, 200, "Evolve"), Box(200, 200, "Turret 1")],
-            [Box(50, 350, "Power"), Box(200, 350, "Turret 2")]
+            [Box(x1, y1, BoxAction.EVOLVE, player=1),  Box(x2, y1, BoxAction.TURRET_1, player=1)],
+            [Box(x1, y2, BoxAction.POWER , player=1),  Box(x2, y2, BoxAction.TURRET_2, player=1)]
         ]
+        x1, x2 = screen_width - 2*(Box.padding + Box.size), screen_width - Box.padding - Box.size, 
         self.boxes_p2 = [
-            [Box(screen_width - 250, 200, "Evolve"), Box(screen_width - 100, 200, "Turret 1")],
-            [Box(screen_width - 250, 350, "Power") , Box(screen_width - 100, 350, "Turret 2")]
+            [Box(x1, y1, BoxAction.EVOLVE, player=2), Box(x2, y1, BoxAction.TURRET_1, player=2)],
+            [Box(x1, y2, BoxAction.POWER , player=2), Box(x2, y2, BoxAction.TURRET_2, player=2)]
         ]
 
         self.selected_box_p1 = (0, 0)
@@ -117,7 +140,7 @@ class UI:
         if keys['right'] in pressed_keys: col = min(1, col + 1)
         return (row, col)
 
-    def update(self, pressed_keys) -> list:
+    def update(self, pressed_keys) -> list[tuple[int, BoxAction]]:
         ''' Takes pressed keys and returns list of player ui selections '''
         self.selected_box_p1 = self.update_selection(pressed_keys, P1_KEYS, self.selected_box_p1)
         self.selected_box_p2 = self.update_selection(pressed_keys, P2_KEYS, self.selected_box_p2)
@@ -135,11 +158,13 @@ class UI:
         # If players make selection
         if pygame.K_SPACE in pressed_keys:
             row, col = self.selected_box_p1
-            ui_selections.append(self.boxes_p1[row][col])
+            box = self.boxes_p1[row][col]
+            ui_selections.append((box.player, box.action))
 
         if pygame.K_RETURN in pressed_keys:
             row, col = self.selected_box_p2
-            ui_selections.append(self.boxes_p2[row][col])
+            box = self.boxes_p2[row][col]
+            ui_selections.append((box.player, box.action))
 
         return ui_selections
 
@@ -255,7 +280,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     pressed_keys.add(event.key)
-                    
+
             self.screen.blit(self.background_image, (0, 0))
 
             ui_selections = self.ui.update(pressed_keys)
