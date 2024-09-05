@@ -24,9 +24,10 @@ Sounds
 UI
 X UI shows unit images
 X Display training queue
-- Display Turret/Evolve/Power options
-- Select Options
-- Evolve button glows with sufficient XP
+X Display Turret/Evolve/Power options
+X Select Options
+X Evolve button glows with sufficient XP
+- Buttons show costs (possible only when selected, but probs jsut always is easier)
 [Evolve] [Turret 1] -> Could have these expand with options when hovered over
 [Power ] [Turret 2]
          [Turret 3]
@@ -43,3 +44,33 @@ Turrets
     - In age Y player can upgrade spot x to turret Y
     - Hit space or enter to upgrade turret
 
+Powers
+- Volcano
+- Flaming Arrows
+- Bombs
+- Space laser
+
+Art
+- Minions
+- Turrets
+- Bases
+- Bullets
+- Attack/Walk animation
+- Damage
+- Victory base explosion
+- Powers
+- UI
+
+Avoiding stale mates
+- Rock Paper Scissors elements
+    - Ranged counters slow heavy
+    - Heavy counter fast melee
+    - Melee counters Ranged
+    - Probably just better to have distinct units and work on balancing
+- Power scaling - player who evolves first has big advantage and chance to win at each Evolution
+- Powers should be really good to give player who skillfully uses at right time a big advantage
+- Endless turret upgrade with longer and longer range until reaches enemy base?
+- Random damage/defense?
+- Sudden death mechanic with gradual health loss?
+- Allow XP advantage to snowball - what else can be gained from advantages in cash/xp to quickly end game?
+    - Expensive OP troops/turrets?
