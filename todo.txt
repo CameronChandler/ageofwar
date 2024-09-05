@@ -24,9 +24,10 @@ Sounds
 UI
 X UI shows unit images
 X Display training queue
-- Display Turret/Evolve/Power options
-- Select Options
-- Evolve button glows with sufficient XP
+X Display Turret/Evolve/Power options
+X Select Options
+X Evolve button glows with sufficient XP
+- Buttons show costs (possible only when selected, but probs jsut always is easier)
 [Evolve] [Turret 1] -> Could have these expand with options when hovered over
 [Power ] [Turret 2]
          [Turret 3]

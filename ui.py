@@ -13,11 +13,16 @@ class Box:
         self.rect = pygame.Rect(x, y, self.size, self.size)
         self.selected = False
 
-    def draw(self, screen):
+    def get_font_color(self, base):
+        if self.action == BoxAction.EVOLVE:
+            return Color.YELLOW if base.can_evolve else Color.WHITE
+        return Color.WHITE
+
+    def draw(self, screen, base):
         color = Color.YELLOW if self.selected else Color.GREY
         pygame.draw.rect(screen, color, self.rect, 4)
         font = pygame.font.Font(None, 24)
-        action_text = font.render(self.action, True, Color.WHITE)
+        action_text = font.render(self.action, True, self.get_font_color(base))
         action_rect = action_text.get_rect(center=self.rect.center)
         screen.blit(action_text, action_rect)
 
@@ -51,7 +56,7 @@ class UI:
     def draw_boxes(self):
         for row in self.boxes_p1 + self.boxes_p2:
             for box in row:
-                box.draw(self.screen)
+                box.draw(self.screen, self.bases[box.player])
 
     def update_selection(self, pressed_keys, keys, selected_box):
         row, col = selected_box
