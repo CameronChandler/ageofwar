@@ -9,6 +9,10 @@ with open('config.json', 'r') as file:
 
 DEBUG = config['debug']
 
+P1_KEYS = {'up': pygame.K_w , 'down': pygame.K_s   , 'left': pygame.K_a   , 'right': pygame.K_d}
+P2_KEYS = {'up': pygame.K_UP, 'down': pygame.K_DOWN, 'left': pygame.K_LEFT, 'right': pygame.K_RIGHT}
+
+
 class ObjectManager:
 
     def __init__(self, bases):
@@ -27,7 +31,7 @@ class ObjectManager:
     def remove_object(self, obj):
         self.objects.remove(obj)
 
-    def update_objects(self, pressed_keys: set):
+    def update_objects(self, pressed_keys: set, ui_selections: list):
         self.pressed_keys = pressed_keys
         current_time = pygame.time.get_ticks()
         self.delta = (current_time - self.last_update_time) / 1_000 # seconds
@@ -66,7 +70,7 @@ class Box:
         self.x = x
         self.y = y
         self.label = label
-        self.rect = pygame.Rect(x, y, 100, 100)  # Adjust size as needed
+        self.rect = pygame.Rect(x, y, 60, 60)
         self.selected = False
 
     def draw(self, screen):
@@ -105,22 +109,18 @@ class UI:
             for box in row:
                 box.draw(self.screen)
 
-    def update_selection(self, keys):
-        # Update selection for Player 1
-        row, col = self.selected_box_p1
-        if pygame.K_w in keys: row = max(0, row - 1)
-        if pygame.K_s in keys: row = min(1, row + 1)
-        if pygame.K_a in keys: col = max(0, col - 1)
-        if pygame.K_d in keys: col = min(1, col + 1)
-        self.selected_box_p1 = (row, col)
+    def update_selection(self, pressed_keys, keys, selected_box):
+        row, col = selected_box
+        if keys['up'] in pressed_keys:    row = max(0, row - 1)
+        if keys['down'] in pressed_keys:  row = min(1, row + 1)
+        if keys['left'] in pressed_keys:  col = max(0, col - 1)
+        if keys['right'] in pressed_keys: col = min(1, col + 1)
+        return (row, col)
 
-        # Update selection for Player 2
-        row, col = self.selected_box_p2
-        if pygame.K_UP    in keys: row = max(0, row - 1)
-        if pygame.K_DOWN  in keys: row = min(1, row + 1)
-        if pygame.K_LEFT  in keys: col = max(0, col - 1)
-        if pygame.K_RIGHT in keys: col = min(1, col + 1)
-        self.selected_box_p2 = (row, col)
+    def update(self, pressed_keys) -> list:
+        ''' Takes pressed keys and returns list of player ui selections '''
+        self.selected_box_p1 = self.update_selection(pressed_keys, P1_KEYS, self.selected_box_p1)
+        self.selected_box_p2 = self.update_selection(pressed_keys, P2_KEYS, self.selected_box_p2)
 
         # Update box highlighting
         for i, row in enumerate(self.boxes_p1):
@@ -131,18 +131,17 @@ class UI:
             for j, box in enumerate(row):
                 box.selected = (i, j) == self.selected_box_p2
 
-    def handle_selection(self, keys):
-        if pygame.K_SPACE in keys:
-            # Handle Player 1's selection
+        ui_selections = []
+        # If players make selection
+        if pygame.K_SPACE in pressed_keys:
             row, col = self.selected_box_p1
-            selected_box = self.boxes_p1[row][col]
-            print(f"Player 1 selected {selected_box.label}")
+            ui_selections.append(self.boxes_p1[row][col])
 
-        if pygame.K_RETURN in keys:
-            # Handle Player 2's selection
+        if pygame.K_RETURN in pressed_keys:
             row, col = self.selected_box_p2
-            selected_box = self.boxes_p2[row][col]
-            print(f"Player 2 selected {selected_box.label}")
+            ui_selections.append(self.boxes_p2[row][col])
+
+        return ui_selections
 
     def draw_minion_choices(self):
         for player in (1, 2):
@@ -256,14 +255,14 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     pressed_keys.add(event.key)
-
+                    
             self.screen.blit(self.background_image, (0, 0))
-            self.object_manager.update_objects(pressed_keys)
-            self.object_manager.draw_objects(self.screen)
 
-            self.ui.update_selection(pressed_keys)
-            self.ui.handle_selection(pressed_keys)
+            ui_selections = self.ui.update(pressed_keys)
             self.ui.draw()
+
+            self.object_manager.update_objects(pressed_keys, ui_selections)
+            self.object_manager.draw_objects(self.screen)
 
             pygame.display.flip()
 
