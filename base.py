@@ -21,6 +21,9 @@ CONTROLS = {
 
 MINION_CHOICES = {
     0: {'spawn_1': Test1, 'spawn_2': Test2, 'spawn_3': Test3},
+    1: {'spawn_1': Test2, 'spawn_2': Test2, 'spawn_3': Test3},
+    2: {'spawn_1': Test3, 'spawn_2': Test2, 'spawn_3': Test3},
+    3: {'spawn_1': Test3, 'spawn_2': Test3, 'spawn_3': Test3},
 }
 
 BASE_WIDTH  = 100
