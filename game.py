@@ -61,17 +61,21 @@ class ObjectManager:
                 if DEBUG:
                     obj.draw_collision_rect(screen)
 
-# class Box:
-#     def __init__(self, x, y, player):
-#         self.x = x
-#         self.y = y
-#         self.player = player
-#         self.rect = pygame.Rect(x, y, 50, 50)  # Adjust size as needed
-#         self.selected = False
+class Box:
+    def __init__(self, x, y, label):
+        self.x = x
+        self.y = y
+        self.label = label
+        self.rect = pygame.Rect(x, y, 100, 100)  # Adjust size as needed
+        self.selected = False
 
-#     def draw(self, screen):
-#         color = Color.YELLOW if self.selected else Color.GREY
-#         pygame.draw.rect(screen, color, self.rect, 2)
+    def draw(self, screen):
+        color = Color.YELLOW if self.selected else Color.GREY
+        pygame.draw.rect(screen, color, self.rect, 4)
+        font = pygame.font.Font(None, 36)
+        label_text = font.render(self.label, True, Color.WHITE)
+        label_rect = label_text.get_rect(center=self.rect.center)
+        screen.blit(label_text, label_rect)
 
 class UI:
 
@@ -83,12 +87,62 @@ class UI:
 
         self.font = pygame.font.Font(None, 36)
 
-        # self.boxes = {
-        #     1: [Box(100 +                     i * 60     , self.screen_height - 100, 1) for i in range(3)],
-        #     2: [Box(self.screen_width - 100 - i * 60 - 50, self.screen_height - 100, 2) for i in range(3)]
-        # }
+        # Create 2x2 grids of boxes for each player
+        self.boxes_p1 = [
+            [Box(50, 200, "Evolve"), Box(200, 200, "Turret 1")],
+            [Box(50, 350, "Power"), Box(200, 350, "Turret 2")]
+        ]
+        self.boxes_p2 = [
+            [Box(screen_width - 250, 200, "Evolve"), Box(screen_width - 100, 200, "Turret 1")],
+            [Box(screen_width - 250, 350, "Power") , Box(screen_width - 100, 350, "Turret 2")]
+        ]
 
-        # self.selected_boxes = {1: 0, 2: 0}
+        self.selected_box_p1 = (0, 0)
+        self.selected_box_p2 = (0, 0)
+
+    def draw_boxes(self):
+        for row in self.boxes_p1 + self.boxes_p2:
+            for box in row:
+                box.draw(self.screen)
+
+    def update_selection(self, keys):
+        # Update selection for Player 1
+        row, col = self.selected_box_p1
+        if pygame.K_w in keys: row = max(0, row - 1)
+        if pygame.K_s in keys: row = min(1, row + 1)
+        if pygame.K_a in keys: col = max(0, col - 1)
+        if pygame.K_d in keys: col = min(1, col + 1)
+        self.selected_box_p1 = (row, col)
+
+        # Update selection for Player 2
+        row, col = self.selected_box_p2
+        if pygame.K_UP    in keys: row = max(0, row - 1)
+        if pygame.K_DOWN  in keys: row = min(1, row + 1)
+        if pygame.K_LEFT  in keys: col = max(0, col - 1)
+        if pygame.K_RIGHT in keys: col = min(1, col + 1)
+        self.selected_box_p2 = (row, col)
+
+        # Update box highlighting
+        for i, row in enumerate(self.boxes_p1):
+            for j, box in enumerate(row):
+                box.selected = (i, j) == self.selected_box_p1
+
+        for i, row in enumerate(self.boxes_p2):
+            for j, box in enumerate(row):
+                box.selected = (i, j) == self.selected_box_p2
+
+    def handle_selection(self, keys):
+        if pygame.K_SPACE in keys:
+            # Handle Player 1's selection
+            row, col = self.selected_box_p1
+            selected_box = self.boxes_p1[row][col]
+            print(f"Player 1 selected {selected_box.label}")
+
+        if pygame.K_RETURN in keys:
+            # Handle Player 2's selection
+            row, col = self.selected_box_p2
+            selected_box = self.boxes_p2[row][col]
+            print(f"Player 2 selected {selected_box.label}")
 
     def draw_minion_choices(self):
         for player in (1, 2):
@@ -171,6 +225,7 @@ class UI:
         self.draw_xp()
         self.draw_minion_choices()
         self.draw_training_queues()
+        self.draw_boxes()
 
 class Game:
     def __init__(self):
@@ -205,6 +260,9 @@ class Game:
             self.screen.blit(self.background_image, (0, 0))
             self.object_manager.update_objects(pressed_keys)
             self.object_manager.draw_objects(self.screen)
+
+            self.ui.update_selection(pressed_keys)
+            self.ui.handle_selection(pressed_keys)
             self.ui.draw()
 
             pygame.display.flip()
