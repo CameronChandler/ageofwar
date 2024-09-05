@@ -29,7 +29,16 @@ class ObjectManager:
         self.objects.remove(obj)
 
     def handle_ui_selections(self, ui_selections: list[tuple[int, BoxAction]]):
-        [print(i) for i in ui_selections]
+        for player, action in ui_selections:
+            if action == BoxAction.EVOLVE:
+                self.bases[player].try_evolve()
+            elif action == BoxAction.TURRET_1:
+                pass
+            elif action == BoxAction.TURRET_2:
+                pass
+            elif action == BoxAction.POWER:
+                pass
+
 
     def update_objects(self, pressed_keys: set, ui_selections: list[tuple[int, BoxAction]]):
         self.pressed_keys = pressed_keys

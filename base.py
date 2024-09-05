@@ -29,6 +29,8 @@ MINION_CHOICES = {
 BASE_WIDTH  = 100
 BASE_HEIGHT = 100
 
+EVOLUTION_COST = config['evolution_costs']
+
 class Base(GameObject, HealthMixin):
     max_queue_length = 5
     inflate_pixels = 70
@@ -58,6 +60,16 @@ class Base(GameObject, HealthMixin):
     @property
     def minion_choices(self):
         return MINION_CHOICES[self.evolution]
+    
+    @property
+    def can_evolve(self):
+        if self.evolution >= len(EVOLUTION_COST):
+            return False
+        return EVOLUTION_COST[self.evolution] <= self.xp
+    
+    def try_evolve(self):
+        if self.can_evolve:
+            self.evolution += 1
     
     def try_spawn(self, object_manager, minion):
         if self.budget >= minion.cost:
