@@ -9,9 +9,16 @@ with open(CONFIG_NAME, 'r') as file:
 
 class Minion(GameObject, HealthMixin):
     inflate_pixels = 30
+    speed = 75
 
     def __init__(self, x, player):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''
+        self.image_path = config['image'][self.minion_id]
+        self.max_health = config['minion_stats'][self.minion_id]['max_health']
+        self.damage     = config['minion_stats'][self.minion_id]['damage']
+        self.cost       = config['minion_stats'][self.minion_id]['cost']
+        self.reward_xp  = config['minion_stats'][self.minion_id]['reward_xp']
+
         self.player = player
         
         self.image = pygame.image.load(self.image_path)
@@ -91,199 +98,138 @@ class Minion(GameObject, HealthMixin):
                 self.time_to_attack -= object_manager.delta
 
 class Chimp(Minion):
-    image_path = config['image']['minion1']
+    minion_id = 'minion1'
     image_size = (25, 50)
-    max_health = 10
-    speed = 75
-    damage = 1
     attack_interval = 0.5
-    cost = 1
-    reward_xp = 1
     reward_cash = 2
-    name = 'Chimp'
     training_time = 0.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
-class ClubMan(Minion):
-    image_path = config['image']['minion2']
+class Clubman(Minion):
+    minion_id = 'minion2'
     image_size = (25, 50)
     max_health = 15
-    speed = 75
-    damage = 2
     attack_interval = 0.7
-    cost = 3
-    reward_xp = 3
     reward_cash = 5
-    name = 'Clubman'
     training_time = 0.8
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Dino(Minion):
-    image_path = config['image']['minion3']
+    minion_id = 'minion3'
     image_size = (50, 50)
     max_health = 20
-    speed = 75
-    damage = 3
     attack_interval = 0.9
-    cost = 6
-    reward_xp = 6
     reward_cash = 9
-    name = 'Dino'
     training_time = 1.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Jester(Minion):
-    image_path = config['image']['minion4']
+    minion_id = 'minion4'
     image_size = (25, 50)
     max_health = 30
-    speed = 75
-    damage = 4
     attack_interval = 0.5
-    cost = 10
-    reward_xp = 15
     reward_cash = 15
-    name = 'Jester'
     training_time = 1.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Knight(Minion):
-    image_path = config['image']['minion5']
+    minion_id = 'minion5'
     image_size = (25, 50)
     max_health = 50
-    speed = 75
-    damage = 5
     attack_interval = 0.7
-    cost = 15
-    reward_xp = 25
     reward_cash = 25
-    name = 'Knight'
     training_time = 2
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Horse(Minion):
-    image_path = config['image']['minion6']
+    minion_id = 'minion6'
     image_size = (25, 50)
     max_health = 80
-    speed = 75
-    damage = 7
     attack_interval = 0.9
-    cost = 25
-    reward_xp = 50
     reward_cash = 50
-    name = 'Horse'
     training_time = 2.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Soldier(Minion):
-    image_path = config['image']['minion7']
+    minion_id = 'minion7'
     image_size = (25, 50)
     max_health = 120
-    speed = 75
-    damage = 10
     attack_interval = 0.4
-    cost = 30
-    reward_xp = 80
     reward_cash = 80
-    name = 'Soldier'
     training_time = 2.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Rambo(Minion):
-    image_path = config['image']['minion8']
+    minion_id = 'minion8'
     image_size = (25, 50)
     max_health = 150
-    speed = 75
-    damage = 12
     attack_interval = 0.6
-    cost = 50
-    reward_xp = 120
     reward_cash = 120
-    name = 'Rambo'
     training_time = 3
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Tank(Minion):
-    image_path = config['image']['minion9']
+    minion_id = 'minion9'
     image_size = (25, 50)
     max_health = 250
-    speed = 75
-    damage = 20
     attack_interval = 1.0
-    cost = 80
-    reward_xp = 180
     reward_cash = 180
-    name = 'Tank'
     training_time = 3.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Alien(Minion):
-    image_path = config['image']['minion10']
+    minion_id = 'minion10'
     image_size = (25, 50)
     max_health = 300
-    speed = 75
-    damage = 30
     attack_interval = 0.4
-    cost = 100
-    reward_xp = 250
     reward_cash = 250
-    name = 'Alien'
     training_time = 3.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class Robot(Minion):
-    image_path = config['image']['minion11']
+    minion_id = 'minion11'
     image_size = (25, 50)
     max_health = 500
-    speed = 75
-    damage = 50
     attack_interval = 0.2
-    cost = 150
-    reward_xp = 350
     reward_cash = 350
-    name = 'Robot'
     training_time = 4
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 class UFO(Minion):
-    image_path = config['image']['minion12']
+    minion_id = 'minion12'
     image_size = (25, 50)
     max_health = 1000
-    speed = 75
-    damage = 80
     attack_interval = 0.1
-    cost = 250
-    reward_xp = 500
     reward_cash = 500
-    name = 'UFO'
     training_time = 5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
 
 MINION_CHOICES = {
-    0: {'spawn_1': Chimp,   'spawn_2': ClubMan, 'spawn_3': Dino},
+    0: {'spawn_1': Chimp,   'spawn_2': Clubman, 'spawn_3': Dino},
     1: {'spawn_1': Jester,  'spawn_2': Knight,  'spawn_3': Horse},
     2: {'spawn_1': Soldier, 'spawn_2': Rambo,   'spawn_3': Tank},
     3: {'spawn_1': Alien,   'spawn_2': Robot,   'spawn_3': UFO},
