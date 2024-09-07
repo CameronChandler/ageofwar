@@ -31,20 +31,21 @@ X Evolve button glows with sufficient XP
 [Evolve] [Turret 1] -> Could have these expand with options when hovered over
 [Power ] [Turret 2]
          [Turret 3]
+- Display costs
 
 Turrets
-- Fire projectiles at nearest target in range
-- Rotate to track nearest target and shoot
-- Egg launcher
-- Crossbow
-- Machine gun!
-- Laser beam
-- Add UI for selecting and buying turrets
-- Each player has X turret spots, UI shows X gaps for upgrading turrets
+X Fire projectiles at nearest target in range
+X Rotate to track nearest target and shoot
+X Egg launcher
+X Crossbow
+X Machine gun!
+X Laser beam
+X Add UI for selecting and buying turrets
+X Each player has X turret spots, UI shows X gaps for upgrading turrets
     - In age Y player can upgrade spot x to turret Y
     - Hit space or enter to upgrade turret
-- Make sure killing enemy with turret gives reward
-- Make turret text yellow when you can afford it
+X Make sure killing enemy with turret gives reward
+X Make turret text yellow when you can afford it
 
 Powers
 - Volcano

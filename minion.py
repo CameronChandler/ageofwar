@@ -98,7 +98,7 @@ class Test1(Minion):
     attack_interval = 0.5
     cost = 1
     reward_xp = 1
-    reward_cash = 1
+    reward_cash = 2
     name = 'Test1'
     training_time = 2
 
@@ -108,15 +108,15 @@ class Test1(Minion):
 class Test2(Minion):
     image_path = config['image']['minion2']
     image_size = (25, 50)
-    max_health = 10
-    speed = 100
-    damage = 1
-    attack_interval = 0.5
-    cost = 1
+    max_health = 15
+    speed = 75
+    damage = 2
+    attack_interval = 0.7
+    cost = 3
     reward_xp = 1
-    reward_cash = 1
+    reward_cash = 5
     name = 'Test2'
-    training_time = 2
+    training_time = 5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -124,15 +124,15 @@ class Test2(Minion):
 class Test3(Minion):
     image_path = config['image']['minion3']
     image_size = (50, 50)
-    max_health = 10
-    speed = 100
-    damage = 1
-    attack_interval = 0.5
-    cost = 1
-    reward_xp = 1
-    reward_cash = 1
+    max_health = 20
+    speed = 50
+    damage = 3
+    attack_interval = 0.9
+    cost = 6
+    reward_xp = 6
+    reward_cash = 9
     name = 'Test3'
-    training_time = 2
+    training_time = 10
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)

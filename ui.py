@@ -1,5 +1,11 @@
 import pygame
 from constants import Color, BoxAction, P1_KEYS, P2_KEYS
+import json
+
+with open('config.json', 'r') as file:
+    config = json.load(file)
+
+EVOLUTION_COST = {evolution: cost for evolution, cost in enumerate(config['evolution_costs'])}
 
 class Box:
     size = 80
@@ -21,14 +27,32 @@ class Box:
         if self.action == BoxAction.TURRET_2:
             return Color.YELLOW if base.can_upgrade_turret(2) else Color.WHITE
         return Color.WHITE
+    
+    def get_text(self, base) -> str:
+        text = self.action
+        if self.action == BoxAction.EVOLVE:
+            if base.evolution in EVOLUTION_COST:
+                text += f'\n{EVOLUTION_COST[base.evolution]}xp'
+            else:
+                text = 'Fully\nEvolved'
+        elif self.action in (BoxAction.TURRET_1, BoxAction.TURRET_2):
+            text += f'\n${base.turret_choice.cost}'
+        return text
 
     def draw(self, screen, base):
         color = Color.YELLOW if self.selected else Color.GREY
         pygame.draw.rect(screen, color, self.rect, 4)
         font = pygame.font.Font(None, 24)
-        action_text = font.render(self.action, True, self.get_font_color(base))
-        action_rect = action_text.get_rect(center=self.rect.center)
-        screen.blit(action_text, action_rect)
+        lines = self.get_text(base).split('\n')
+
+        y_offset = 20
+        for i, line in enumerate(lines):
+            action_text = font.render(line, True, self.get_font_color(base))
+            y_pos = self.rect.centery
+            if self.action != BoxAction.POWER:
+                y_pos += i*y_offset - y_offset/3
+            action_rect = action_text.get_rect(center=(self.rect.centerx, y_pos))
+            screen.blit(action_text, action_rect)
 
 class UI:
 

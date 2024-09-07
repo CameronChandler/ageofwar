@@ -74,6 +74,10 @@ class Base(GameObject, HealthMixin):
     @property
     def minion_choices(self):
         return MINION_CHOICES[self.evolution]
+
+    @property
+    def turret_choice(self):
+        return TURRET_CHOICES[self.evolution]
     
     @property
     def can_evolve(self):
