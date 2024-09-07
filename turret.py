@@ -138,7 +138,7 @@ class EggLauncher(Turret):
     image_path = config['image']['turret1']
     image_size = (60, 10)
     bullets_per_second = 0.5
-    cost = 1
+    cost = 5
     name = 'Egg Launcher'
     target_range = 500
     ProjectileClass = Egg

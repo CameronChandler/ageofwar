@@ -23,6 +23,9 @@ class ObjectManager:
         self.last_update_time = pygame.time.get_ticks()
         self.pressed_keys = set()
 
+        self.screen_width = config['screen_width']
+        self.screen_height = config['screen_height']
+
     def add_object(self, obj):
         self.objects.append(obj)
 
@@ -41,6 +44,13 @@ class ObjectManager:
             elif action == BoxAction.POWER:
                 pass
 
+    def is_off_screen(self, obj):
+        threshold = 500  # Pixels off-screen threshold
+        return (
+            obj.x < -threshold or obj.x > self.screen_width  + threshold or
+            obj.y < -threshold or obj.y > self.screen_height + threshold
+        )
+
     def update_objects(self, pressed_keys: set, ui_selections: list[tuple[int, BoxAction]]):
         self.pressed_keys = pressed_keys
         current_time = pygame.time.get_ticks()
@@ -49,6 +59,9 @@ class ObjectManager:
             obj.update(self)
             if isinstance(obj, HealthMixin) and obj.health <= 0:
                 self.handle_death(obj)
+
+            if self.is_off_screen(obj):
+                self.remove_object(obj)
 
         self.last_update_time = current_time
 

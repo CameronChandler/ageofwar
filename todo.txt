@@ -43,6 +43,7 @@ Turrets
 - Each player has X turret spots, UI shows X gaps for upgrading turrets
     - In age Y player can upgrade spot x to turret Y
     - Hit space or enter to upgrade turret
+- Make sure killing enemy with turret gives reward
 
 Powers
 - Volcano
