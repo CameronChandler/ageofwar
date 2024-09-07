@@ -140,7 +140,7 @@ class EggLauncher(Turret):
     bullets_per_second = 0.5
     cost = 1
     name = 'Egg Launcher'
-    target_range = 100
+    target_range = 200
     ProjectileClass = Egg
 
     def __init__(self, x: float, y: float, player: int):
@@ -152,7 +152,7 @@ class Crossbow(Turret):
     bullets_per_second = 1
     cost = 1
     name = 'Crossbow'
-    target_range = 200
+    target_range = 250
     ProjectileClass = Arrow
 
     def __init__(self, x: float, y: float, player: int):
@@ -176,7 +176,7 @@ class LaserCannon(Turret):
     bullets_per_second = 10
     cost = 1
     name = 'Laser Cannon'
-    target_range = 500
+    target_range = 350
     ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int):
