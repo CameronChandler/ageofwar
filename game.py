@@ -28,6 +28,7 @@ class ObjectManager:
 
     def remove_object(self, obj):
         self.objects.remove(obj)
+        del obj
 
     def handle_ui_selections(self, ui_selections: list[tuple[int, BoxAction]]):
         for player, action in ui_selections:

@@ -54,6 +54,10 @@ class Minion(GameObject, HealthMixin):
         """Detect if there is an enemy or a older friendly minion in front of this minion"""
         # Iterating through list backwards to detect minions first (bases are at front of list)
         for obj in object_manager.objects[::-1]:
+            parent_class_name = str(type(obj).__bases__)
+            if not isinstance(obj, Minion) and not 'Base' in parent_class_name:
+                continue
+
             if obj.collision_rect.colliderect(self.collision_rect):
                 is_in_front = (self.player == 1 and obj.x > self.x) or (self.player == 2 and obj.x < self.x)
                 if not is_in_front:

@@ -74,3 +74,9 @@ Avoiding stale mates
 - Sudden death mechanic with gradual health loss?
 - Allow XP advantage to snowball - what else can be gained from advantages in cash/xp to quickly end game?
     - Expensive OP troops/turrets?
+
+
+####
+Turrets should be part of bases (so when bases disappear so do turrets)
+- This means that bases should call draw on turrets
+But bullets should be owned directly by the object manager

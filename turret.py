@@ -2,12 +2,14 @@ import pygame
 from game_object import GameObject
 import json
 from typing import Optional
-from math import atan2, degrees, radians, copysign
+from math import atan2, degrees, copysign
+from projectile import Projectile1
 
 with open('config.json', 'r') as file:
     config = json.load(file)
 
 class Turret(GameObject):
+    rotational_velocity = 90 # degrees/second
 
     def __init__(self, x, y, player):
         self.player = player
@@ -25,12 +27,17 @@ class Turret(GameObject):
             self.speed = -self.speed
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
 
+        self.attack_interval = 1 / self.bullets_per_second
         self.time_to_attack = self.attack_interval
 
         super().__init__()
 
     @property
     def name():
+        raise NotImplementedError
+
+    @property
+    def ProjectileClass():
         raise NotImplementedError
 
     @property
@@ -42,7 +49,7 @@ class Turret(GameObject):
         raise NotImplementedError
 
     @property
-    def attack_interval():
+    def bullets_per_second():
         raise NotImplementedError
 
     @property
@@ -58,6 +65,10 @@ class Turret(GameObject):
         nearest_distance = float('inf')
 
         for obj in object_manager.objects:
+            parent_class_name = str(type(obj).__bases__)
+            if not 'Minion' in parent_class_name and not 'Base' in parent_class_name:
+                continue
+            
             if obj.player != self.player:
                 distance = self.distance(self, obj)
                 if (distance < nearest_distance) & (distance < self.target_range):
@@ -66,8 +77,8 @@ class Turret(GameObject):
 
         return nearest_enemy
 
-    def shoot(self, target):
-        ...
+    def shoot(self, object_manager):
+        object_manager.add_object(self.ProjectileClass(self.x, self.y, self.angle, self.player))
 
     def rotate_toward(self, target, delta):
         """Rotate the turret to point at the target and return the updated angle."""
@@ -106,10 +117,10 @@ class Turret(GameObject):
 
         # Check if it's time to attack
         if self.time_to_attack <= 0:
-            self.shoot(nearest_enemy)
-            self.time_to_attack = self.attack_interval  # Reset attack timer
+            self.shoot(object_manager)
+            self.time_to_attack = self.attack_interval
         else:
-            self.time_to_attack -= object_manager.delta  # Countdown timer
+            self.time_to_attack -= object_manager.delta
 
 class Turret1(Turret):
     image_path = config['image']['turret1']
@@ -117,14 +128,14 @@ class Turret1(Turret):
     max_health = 100
     speed = 100
     damage = 10
-    attack_interval = 0.5
+    bullets_per_second = 1
     cost = 1
     reward_xp = 1
     reward_cash = 1
     name = 'Turret1'
     training_time = 2
     target_range = 500
-    rotational_velocity = 90 # degrees/second
+    ProjectileClass = Projectile1
 
     def __init__(self, x: float, y: float, player: int):
         super().__init__(x, y, player)
