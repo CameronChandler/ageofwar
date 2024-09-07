@@ -84,3 +84,12 @@ Avoiding stale mates
 Turrets should be part of bases (so when bases disappear so do turrets)
 - This means that bases should call draw on turrets
 But bullets should be owned directly by the object manager
+
+Finish test config
+
+Rock paper scissors with fire/water/grass?
+
+Capture ground to incentivise spawning/pushing
+- Gain xp & $ - exponentially more with passing time
+
+Make turrets slightly cheaper
