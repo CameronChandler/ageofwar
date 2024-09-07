@@ -43,6 +43,8 @@ Turrets
 - Each player has X turret spots, UI shows X gaps for upgrading turrets
     - In age Y player can upgrade spot x to turret Y
     - Hit space or enter to upgrade turret
+- Make sure killing enemy with turret gives reward
+- Make turret text yellow when you can afford it
 
 Powers
 - Volcano
@@ -74,3 +76,9 @@ Avoiding stale mates
 - Sudden death mechanic with gradual health loss?
 - Allow XP advantage to snowball - what else can be gained from advantages in cash/xp to quickly end game?
     - Expensive OP troops/turrets?
+
+
+####
+Turrets should be part of bases (so when bases disappear so do turrets)
+- This means that bases should call draw on turrets
+But bullets should be owned directly by the object manager

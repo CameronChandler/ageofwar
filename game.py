@@ -4,9 +4,10 @@ from base import P1Base, P2Base
 from game_object import HealthMixin
 from ui import UI
 from constants import BoxAction
+from turret import EggLauncher
 
 with open('config.json', 'r') as file:
-    config =  json.load(file)
+    config = json.load(file)
 
 DEBUG = config['debug']
 
@@ -22,23 +23,33 @@ class ObjectManager:
         self.last_update_time = pygame.time.get_ticks()
         self.pressed_keys = set()
 
+        self.screen_width = config['screen_width']
+        self.screen_height = config['screen_height']
+
     def add_object(self, obj):
         self.objects.append(obj)
 
     def remove_object(self, obj):
         self.objects.remove(obj)
+        del obj
 
     def handle_ui_selections(self, ui_selections: list[tuple[int, BoxAction]]):
         for player, action in ui_selections:
             if action == BoxAction.EVOLVE:
                 self.bases[player].try_evolve()
             elif action == BoxAction.TURRET_1:
-                pass
+                self.bases[player].try_upgrade_turret(1)
             elif action == BoxAction.TURRET_2:
-                pass
+                self.bases[player].try_upgrade_turret(2)
             elif action == BoxAction.POWER:
                 pass
 
+    def is_off_screen(self, obj):
+        threshold = 500  # Pixels off-screen threshold
+        return (
+            obj.x < -threshold or obj.x > self.screen_width  + threshold or
+            obj.y < -threshold or obj.y > self.screen_height + threshold
+        )
 
     def update_objects(self, pressed_keys: set, ui_selections: list[tuple[int, BoxAction]]):
         self.pressed_keys = pressed_keys
@@ -48,6 +59,9 @@ class ObjectManager:
             obj.update(self)
             if isinstance(obj, HealthMixin) and obj.health <= 0:
                 self.handle_death(obj)
+
+            if self.is_off_screen(obj):
+                self.remove_object(obj)
 
         self.last_update_time = current_time
 

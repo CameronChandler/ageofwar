@@ -2,9 +2,10 @@ import pygame
 import json
 from game_object import GameObject, HealthMixin
 from minion import Test1, Test2, Test3
+from turret import EggLauncher, Crossbow, MachineGun, LaserCannon
 
 with open('config.json', 'r') as file:
-    config =  json.load(file)
+    config = json.load(file)
 
 CONTROLS = {
     1: {
@@ -26,8 +27,12 @@ MINION_CHOICES = {
     3: {'spawn_1': Test3, 'spawn_2': Test3, 'spawn_3': Test3},
 }
 
-BASE_WIDTH  = 100
-BASE_HEIGHT = 100
+TURRET_CHOICES = {
+    0: EggLauncher, 
+    1: Crossbow, 
+    2: MachineGun, 
+    3: LaserCannon
+}
 
 EVOLUTION_COST = config['evolution_costs']
 
@@ -36,18 +41,19 @@ class Base(GameObject, HealthMixin):
     inflate_pixels = 70
     reward_xp = 1e6
     reward_cash = 1e6
+    image_size = (100, 100)
+    max_health = 100
 
     def __init__(self, player):
-        super().__init__()
         self.player = player
-        self.max_health = self.health = config['base_health']
+        self.health = self.max_health
         self.image = pygame.image.load(config['image']['base'])
-        self.image = pygame.transform.scale(self.image, (BASE_WIDTH, BASE_HEIGHT))
+        self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
         self.rect = self.image.get_rect()
 
         offset = 10
-        self.x = offset if player == 1 else config['screen_width'] - BASE_WIDTH - offset
-        self.y = config['screen_height'] - BASE_HEIGHT - config['ground_height']
+        self.x = {1: offset, 2: config['screen_width'] - self.image_size[0] - offset}[self.player]
+        self.y = config['screen_height'] - self.image_size[1] - config['ground_height']
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
         self.budget = 10
@@ -56,6 +62,14 @@ class Base(GameObject, HealthMixin):
 
         self.training_queue = []
         self.elapsed_training_time = 0
+
+        self.turrets = {1: None, 2: None}
+        self.turret_x = self.x
+        if self.player == 1:
+            self.turret_x += self.image_size[0]
+        self.turret_y = {1: self.y - 100, 2: self.y - 50}
+
+        super().__init__()
 
     @property
     def minion_choices(self):
@@ -94,6 +108,17 @@ class Base(GameObject, HealthMixin):
         self._check_player_input(object_manager)
         self._process_training_queue(object_manager)
 
+        for turret in self.turrets.values():
+            if turret is not None:
+                turret.update(object_manager)
+
+    def draw(self, screen):
+        for turret in self.turrets.values():
+            if turret is not None:
+                turret.draw(screen)
+
+        super().draw(screen)
+
     def _process_training_queue(self, object_manager):
         if not self.training_queue:
             return
@@ -101,7 +126,7 @@ class Base(GameObject, HealthMixin):
         minion_class = self.training_queue[0]
         self.elapsed_training_time += object_manager.delta
         if self.elapsed_training_time >= minion_class.training_time:
-            object_manager.add_object(minion_class(self.x + BASE_WIDTH/2, self.player))
+            object_manager.add_object(minion_class(self.x + self.image_size[0]/2, self.player))
             self.elapsed_training_time = 0
             self.training_queue.pop(0)
 
@@ -112,6 +137,31 @@ class Base(GameObject, HealthMixin):
             current_minion_class = self.training_queue[0]
             queue_progress = self.elapsed_training_time / current_minion_class.training_time
         return queue_length, queue_progress
+    
+    def get_turret_cost(self, turret: int) -> int:
+        NewTurretClass = TURRET_CHOICES[self.evolution]
+        current_cost = 0 if self.turrets[turret] is None else self.turrets[turret].cost
+        return NewTurretClass.cost - current_cost
+    
+    def can_upgrade_turret(self, turret: int):
+        NewTurretClass = TURRET_CHOICES[self.evolution]
+        current_turret_is_worse = self.turrets[turret].__class__ != NewTurretClass
+        can_afford = self.budget - self.get_turret_cost(turret) >= 0
+
+        return current_turret_is_worse and can_afford
+    
+    def try_upgrade_turret(self, turret: int):
+        NewTurretClass = TURRET_CHOICES[self.evolution]
+
+        if self.can_upgrade_turret(turret):
+            self.budget -= self.get_turret_cost(turret)
+            
+            angle = None
+            if self.turrets[turret] is not None:
+                angle = self.turrets[turret].angle
+
+            del self.turrets[turret]
+            self.turrets[turret] = NewTurretClass(self.turret_x, self.turret_y[turret], self.player, angle)
 
 class P1Base(Base):
     def __init__(self):

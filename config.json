@@ -2,14 +2,21 @@
     "debug": true,
     "screen_width": 1700,
     "screen_height": 600,
-    "base_health": 100,
     "ground_height": 30,
     "image": {
         "background": "./assets/background.png",
         "base": "./assets/base.png",
         "minion1": "./assets/minion1.png",
         "minion2": "./assets/minion2.jpg",
-        "minion3": "./assets/minion3.png"
+        "minion3": "./assets/minion3.png",
+        "turret1": "./assets/turret1.png",
+        "turret2": "./assets/turret1.png",
+        "turret3": "./assets/turret1.png",
+        "turret4": "./assets/turret1.png",
+        "projectile1": "./assets/projectile1.png",
+        "projectile2": "./assets/projectile1.png",
+        "projectile3": "./assets/projectile1.png",
+        "projectile4": "./assets/projectile1.png"
     },
     "evolution_costs": [1, 2, 3]
 }

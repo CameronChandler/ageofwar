@@ -16,6 +16,10 @@ class Box:
     def get_font_color(self, base):
         if self.action == BoxAction.EVOLVE:
             return Color.YELLOW if base.can_evolve else Color.WHITE
+        if self.action == BoxAction.TURRET_1:
+            return Color.YELLOW if base.can_upgrade_turret(1) else Color.WHITE
+        if self.action == BoxAction.TURRET_2:
+            return Color.YELLOW if base.can_upgrade_turret(2) else Color.WHITE
         return Color.WHITE
 
     def draw(self, screen, base):
