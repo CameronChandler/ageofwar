@@ -11,7 +11,7 @@ with open('config.json', 'r') as file:
 class Turret(GameObject):
     rotational_velocity = 90 # degrees/second
 
-    def __init__(self, x, y, player):
+    def __init__(self, x, y, player, angle):
         self.player = player
         
         self.image = pygame.image.load(self.image_path)
@@ -19,11 +19,13 @@ class Turret(GameObject):
         self.original_image = self.image.copy()
         
         self.x, self.y = x, y
+        # if player 1, move turret back one length
+        if self.player == 1:
+            self.x -= self.image_size[0]
         self.rect = self.image.get_rect(center=(self.x, self.y))
         
-        self.angle = 0
+        self.angle = angle if angle is not None else 0        
         if self.player == 2:
-            self.angle += 180
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
 
         self.attack_interval = 1 / self.bullets_per_second
@@ -143,8 +145,11 @@ class EggLauncher(Turret):
     target_range = 200
     ProjectileClass = Egg
 
-    def __init__(self, x: float, y: float, player: int):
-        super().__init__(x, y, player)
+    def __init__(self, x: float, y: float, player: int, angle: int = 0):
+        super().__init__(x, y, player, angle)
+
+        if player == 2:
+            self.angle += 180
 
 class Crossbow(Turret):
     image_path = config['image']['turret2']
@@ -155,8 +160,8 @@ class Crossbow(Turret):
     target_range = 250
     ProjectileClass = Arrow
 
-    def __init__(self, x: float, y: float, player: int):
-        super().__init__(x, y, player)
+    def __init__(self, x: float, y: float, player: int, angle: int = 0):
+        super().__init__(x, y, player, angle)
 
 class MachineGun(Turret):
     image_path = config['image']['turret3']
@@ -167,8 +172,8 @@ class MachineGun(Turret):
     target_range = 300
     ProjectileClass = Bullet
 
-    def __init__(self, x: float, y: float, player: int):
-        super().__init__(x, y, player)
+    def __init__(self, x: float, y: float, player: int, angle: int = 0):
+        super().__init__(x, y, player, angle)
 
 class LaserCannon(Turret):
     image_path = config['image']['turret4']
@@ -179,5 +184,5 @@ class LaserCannon(Turret):
     target_range = 350
     ProjectileClass = Laser
 
-    def __init__(self, x: float, y: float, player: int):
-        super().__init__(x, y, player)
+    def __init__(self, x: float, y: float, player: int, angle: int = 0):
+        super().__init__(x, y, player, angle)

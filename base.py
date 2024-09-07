@@ -64,7 +64,9 @@ class Base(GameObject, HealthMixin):
         self.elapsed_training_time = 0
 
         self.turrets = {1: None, 2: None}
-        self.turret_x = self.x + {1: -10, 2: 10}[self.player]
+        self.turret_x = self.x
+        if self.player == 1:
+            self.turret_x += self.image_size[0]
         self.turret_y = {1: self.y - 100, 2: self.y - 50}
 
         super().__init__()
@@ -141,15 +143,25 @@ class Base(GameObject, HealthMixin):
         current_cost = 0 if self.turrets[turret] is None else self.turrets[turret].cost
         return NewTurretClass.cost - current_cost
     
-    def try_upgrade_turret(self, turret: int):
+    def can_upgrade_turret(self, turret: int):
         NewTurretClass = TURRET_CHOICES[self.evolution]
         current_turret_is_worse = self.turrets[turret].__class__ != NewTurretClass
         can_afford = self.budget - self.get_turret_cost(turret) >= 0
 
-        if current_turret_is_worse and can_afford:
+        return current_turret_is_worse and can_afford
+    
+    def try_upgrade_turret(self, turret: int):
+        NewTurretClass = TURRET_CHOICES[self.evolution]
+
+        if self.can_upgrade_turret(turret):
             self.budget -= self.get_turret_cost(turret)
+            
+            angle = None
+            if self.turrets[turret] is not None:
+                angle = self.turrets[turret].angle
+
             del self.turrets[turret]
-            self.turrets[turret] = NewTurretClass(self.turret_x, self.turret_y[turret], self.player)
+            self.turrets[turret] = NewTurretClass(self.turret_x, self.turret_y[turret], self.player, angle)
 
 class P1Base(Base):
     def __init__(self):
