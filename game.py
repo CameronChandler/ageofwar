@@ -3,10 +3,9 @@ import json
 from base import P1Base, P2Base
 from game_object import HealthMixin
 from ui import UI
-from constants import BoxAction
-from turret import EggLauncher
+from constants import BoxAction, CONFIG_NAME
 
-with open('config.json', 'r') as file:
+with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 DEBUG = config['debug']

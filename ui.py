@@ -1,8 +1,8 @@
 import pygame
-from constants import Color, BoxAction, P1_KEYS, P2_KEYS
+from constants import Color, BoxAction, P1_KEYS, P2_KEYS, CONFIG_NAME
 import json
 
-with open('config.json', 'r') as file:
+with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 EVOLUTION_COST = {evolution: cost for evolution, cost in enumerate(config['evolution_costs'])}

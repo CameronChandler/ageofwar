@@ -4,8 +4,9 @@ import json
 from typing import Optional
 from math import atan2, degrees, copysign, sin, cos, radians
 from projectile import Egg, Arrow, Bullet, Laser
+from constants import CONFIG_NAME
 
-with open('config.json', 'r') as file:
+with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 class Turret(GameObject):
@@ -140,7 +141,7 @@ class EggLauncher(Turret):
     image_path = config['image']['turret1']
     image_size = (60, 10)
     bullets_per_second = 0.5
-    cost = 1
+    cost = 50
     name = 'Egg Launcher'
     target_range = 200
     ProjectileClass = Egg
@@ -155,7 +156,7 @@ class Crossbow(Turret):
     image_path = config['image']['turret2']
     image_size = (60, 10)
     bullets_per_second = 1
-    cost = 1
+    cost = 500
     name = 'Crossbow'
     target_range = 250
     ProjectileClass = Arrow
@@ -167,7 +168,7 @@ class MachineGun(Turret):
     image_path = config['image']['turret3']
     image_size = (60, 10)
     bullets_per_second = 5
-    cost = 1
+    cost = 5_000
     name = 'Machine Gun'
     target_range = 300
     ProjectileClass = Bullet
@@ -179,10 +180,17 @@ class LaserCannon(Turret):
     image_path = config['image']['turret4']
     image_size = (60, 10)
     bullets_per_second = 10
-    cost = 1
+    cost = 50_000
     name = 'Laser Cannon'
     target_range = 350
     ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
         super().__init__(x, y, player, angle)
+
+TURRET_CHOICES = {
+    0: EggLauncher, 
+    1: Crossbow, 
+    2: MachineGun, 
+    3: LaserCannon
+}

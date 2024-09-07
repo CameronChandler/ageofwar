@@ -2,8 +2,9 @@ import pygame
 from game_object import GameObject
 import json
 from math import radians, cos, sin
+from constants import CONFIG_NAME
 
-with open('config.json', 'r') as file:
+with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 class Projectile(GameObject):

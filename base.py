@@ -1,10 +1,11 @@
 import pygame
 import json
 from game_object import GameObject, HealthMixin
-from minion import Test1, Test2, Test3
-from turret import EggLauncher, Crossbow, MachineGun, LaserCannon
+from minion import MINION_CHOICES
+from turret import TURRET_CHOICES
+from constants import CONFIG_NAME
 
-with open('config.json', 'r') as file:
+with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 CONTROLS = {
@@ -18,20 +19,6 @@ CONTROLS = {
         'spawn_2': pygame.K_PERIOD,
         'spawn_3': pygame.K_SLASH,
     }
-}
-
-MINION_CHOICES = {
-    0: {'spawn_1': Test1, 'spawn_2': Test2, 'spawn_3': Test3},
-    1: {'spawn_1': Test2, 'spawn_2': Test2, 'spawn_3': Test3},
-    2: {'spawn_1': Test3, 'spawn_2': Test2, 'spawn_3': Test3},
-    3: {'spawn_1': Test3, 'spawn_2': Test3, 'spawn_3': Test3},
-}
-
-TURRET_CHOICES = {
-    0: EggLauncher, 
-    1: Crossbow, 
-    2: MachineGun, 
-    3: LaserCannon
 }
 
 EVOLUTION_COST = config['evolution_costs']
