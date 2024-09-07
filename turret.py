@@ -2,9 +2,10 @@ import pygame
 from game_object import GameObject
 import json
 from typing import Optional
+from math import atan2, degrees
 
 with open('config.json', 'r') as file:
-    config =  json.load(file)
+    config = json.load(file)
 
 class Turret(GameObject):
 
@@ -13,10 +14,12 @@ class Turret(GameObject):
         
         self.image = pygame.image.load(self.image_path)
         self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
+        self.original_image = self.image.copy()
         
         self.x, self.y = x, y
-        self.rect = self.image.get_rect(center=(self.x, self.y))
-
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        
+        self.angle = 0
         if self.player == 2:
             self.speed = -self.speed
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
@@ -40,42 +43,52 @@ class Turret(GameObject):
     @property
     def attack_interval():
         raise NotImplementedError
+    
+    def distance(self, obj1, obj2):
+        return ((obj1.x - obj2.x) ** 2 + (obj1.y - obj2.y) ** 2) ** 0.5
 
     def find_nearest_enemy(self, object_manager) -> Optional[GameObject]:
-        """Detect if there is an enemy or a older friendly minion in front of this minion"""
-        # # Iterating through list backwards to detect minions first (bases are at front of list)
-        # for obj in object_manager.objects[::-1]:
-        #     if obj.collision_rect.colliderect(self.collision_rect):
-        #         is_in_front = (self.player == 1 and obj.x > self.x) or (self.player == 2 and obj.x < self.x)
-        #         if not is_in_front:
-        #             continue
+        """Find the nearest enemy within a certain range."""
+        nearest_enemy = None
+        nearest_distance = float('inf')
 
-        #         if self.player != obj.player:
-        #             return obj
-                
-        #         elif isinstance(obj, Minion) and obj != self:
-        #             return obj
+        for obj in object_manager.objects:
+            if obj.player != self.player:
+                distance = self.distance(self, obj)
+                if distance < nearest_distance:
+                    nearest_distance = distance
+                    nearest_enemy = obj
 
-        return None
+        return nearest_enemy
 
     def shoot(self, target):
         ...
+
+    def rotate_toward(self, target):
+        """Rotate the turret to point at the target."""
+        # Calculate the angle to the target in radians
+        dx = target.center_x - self.center_x
+        dy = target.center_y - self.center_y
+        self.angle = degrees(atan2(dy, dx))  # Convert to degrees
+
+        # Rotate the image to point at the target
+        self.image = pygame.transform.rotate(self.original_image, -self.angle)
+        self.rect = self.image.get_rect(center=(self.center_x, self.center_y))
     
     def update(self, object_manager):
         nearest_enemy = self.find_nearest_enemy(object_manager)
         if nearest_enemy is None:
             return
-        # self.moving = obstacle is None
 
-        # # Move if nothing in the way, else try and attack if enemy
-        # if self.moving:
-        #     self._move(object_manager.delta)
-        # elif obstacle.player != self.player:
-        #     if self.time_to_attack < 0:
-        #         self.attack(obstacle)
-        #         self.time_to_attack = self.attack_interval
-        #     else:
-        #         self.time_to_attack -= object_manager.delta
+        # Rotate to face the nearest enemy
+        self.rotate_toward(nearest_enemy)
+
+        # Check if it's time to attack
+        if self.time_to_attack <= 0:
+            self.shoot(nearest_enemy)
+            self.time_to_attack = self.attack_interval  # Reset attack timer
+        else:
+            self.time_to_attack -= object_manager.delta  # Countdown timer
 
 class Turret1(Turret):
     image_path = config['image']['turret1']

@@ -10,6 +10,14 @@ class GameObject:
         self.age = pygame.time.get_ticks()
 
     @property
+    def center_x(self):
+        return self.x + self.image_size[0]/2
+
+    @property
+    def center_y(self):
+        return self.y + self.image_size[1]/2
+    
+    @property
     def collision_rect(self):
         """Return an inflated rectangle centered around the original rectangle."""
         return self.rect.inflate(self.inflate_pixels, 0)

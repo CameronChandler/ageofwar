@@ -4,7 +4,7 @@ import json
 from typing import Optional
 
 with open('config.json', 'r') as file:
-    config =  json.load(file)
+    config = json.load(file)
 
 class Minion(GameObject, HealthMixin):
     inflate_pixels = 30

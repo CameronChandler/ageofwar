@@ -5,7 +5,7 @@ from minion import Test1, Test2, Test3
 from turret import Turret
 
 with open('config.json', 'r') as file:
-    config =  json.load(file)
+    config = json.load(file)
 
 CONTROLS = {
     1: {
@@ -27,9 +27,6 @@ MINION_CHOICES = {
     3: {'spawn_1': Test3, 'spawn_2': Test3, 'spawn_3': Test3},
 }
 
-BASE_WIDTH  = 100
-BASE_HEIGHT = 100
-
 EVOLUTION_COST = config['evolution_costs']
 
 class Base(GameObject, HealthMixin):
@@ -37,18 +34,19 @@ class Base(GameObject, HealthMixin):
     inflate_pixels = 70
     reward_xp = 1e6
     reward_cash = 1e6
+    image_size = (100, 100)
+    max_health = 100
 
     def __init__(self, player):
-        super().__init__()
         self.player = player
-        self.max_health = self.health = config['base_health']
+        self.health = self.max_health
         self.image = pygame.image.load(config['image']['base'])
-        self.image = pygame.transform.scale(self.image, (BASE_WIDTH, BASE_HEIGHT))
+        self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
         self.rect = self.image.get_rect()
 
         offset = 10
-        self.x = offset if player == 1 else config['screen_width'] - BASE_WIDTH - offset
-        self.y = config['screen_height'] - BASE_HEIGHT - config['ground_height']
+        self.x = offset if player == 1 else config['screen_width'] - self.image_size[0] - offset
+        self.y = config['screen_height'] - self.image_size[1] - config['ground_height']
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
         self.budget = 10
@@ -57,6 +55,8 @@ class Base(GameObject, HealthMixin):
 
         self.training_queue = []
         self.elapsed_training_time = 0
+        
+        super().__init__()
 
     @property
     def minion_choices(self):
@@ -102,7 +102,7 @@ class Base(GameObject, HealthMixin):
         minion_class = self.training_queue[0]
         self.elapsed_training_time += object_manager.delta
         if self.elapsed_training_time >= minion_class.training_time:
-            object_manager.add_object(minion_class(self.x + BASE_WIDTH/2, self.player))
+            object_manager.add_object(minion_class(self.x + self.image_size[0]/2, self.player))
             self.elapsed_training_time = 0
             self.training_queue.pop(0)
 

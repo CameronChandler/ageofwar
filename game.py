@@ -7,7 +7,7 @@ from constants import BoxAction
 from turret import Turret1
 
 with open('config.json', 'r') as file:
-    config =  json.load(file)
+    config = json.load(file)
 
 DEBUG = config['debug']
 
