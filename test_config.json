@@ -41,5 +41,11 @@
         "minion10": {"max_health": 15, "damage": 2, "cost": 3, "reward_xp": 5},
         "minion11": {"max_health": 15, "damage": 2, "cost": 3, "reward_xp": 5},
         "minion12": {"max_health": 15, "damage": 2, "cost": 3, "reward_xp": 5}
+    },
+    "turret_stats": {
+        "turret1": {"cost": 1},
+        "turret2": {"cost": 1},
+        "turret3": {"cost": 1},
+        "turret4": {"cost": 1}
     }
 }

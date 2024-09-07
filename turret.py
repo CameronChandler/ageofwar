@@ -10,7 +10,6 @@ with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 class Turret(GameObject):
-    rotational_velocity = 90 # degrees/second
 
     def __init__(self, x, y, player, angle):
         self.player = player
@@ -33,30 +32,6 @@ class Turret(GameObject):
         self.time_to_attack = self.attack_interval
 
         super().__init__()
-
-    @property
-    def name():
-        raise NotImplementedError
-
-    @property
-    def ProjectileClass():
-        raise NotImplementedError
-
-    @property
-    def cost():
-        raise NotImplementedError
-
-    @property
-    def training_time():
-        raise NotImplementedError
-
-    @property
-    def bullets_per_second():
-        raise NotImplementedError
-
-    @property
-    def target_range():
-        raise NotImplementedError
     
     @property
     def muzzle_position(self):
@@ -137,12 +112,17 @@ class Turret(GameObject):
         else:
             self.time_to_attack -= object_manager.delta
 
+    @classmethod
+    def load_attributes_from_config(cls):
+        """Load static attributes for a specific minion type from the config."""
+        cls.image_path = config['image'][cls.turret_id]
+        cls.cost       = config['turret_stats'][cls.turret_id]['cost']
+
 class EggLauncher(Turret):
-    image_path = config['image']['turret1']
+    rotational_velocity = 60 # degrees/second
+    turret_id = 'turret1'
     image_size = (60, 10)
     bullets_per_second = 0.5
-    cost = 50
-    name = 'Egg Launcher'
     target_range = 200
     ProjectileClass = Egg
 
@@ -153,11 +133,10 @@ class EggLauncher(Turret):
             self.angle += 180
 
 class Crossbow(Turret):
-    image_path = config['image']['turret2']
+    rotational_velocity = 90 # degrees/second
+    turret_id = 'turret2'
     image_size = (60, 10)
     bullets_per_second = 1
-    cost = 500
-    name = 'Crossbow'
     target_range = 250
     ProjectileClass = Arrow
 
@@ -165,11 +144,10 @@ class Crossbow(Turret):
         super().__init__(x, y, player, angle)
 
 class MachineGun(Turret):
-    image_path = config['image']['turret3']
+    rotational_velocity = 120 # degrees/second
+    turret_id = 'turret3'
     image_size = (60, 10)
     bullets_per_second = 5
-    cost = 5_000
-    name = 'Machine Gun'
     target_range = 300
     ProjectileClass = Bullet
 
@@ -177,16 +155,18 @@ class MachineGun(Turret):
         super().__init__(x, y, player, angle)
 
 class LaserCannon(Turret):
-    image_path = config['image']['turret4']
+    rotational_velocity = 180 # degrees/second
+    turret_id = 'turret4'
     image_size = (60, 10)
     bullets_per_second = 10
-    cost = 50_000
-    name = 'Laser Cannon'
     target_range = 350
     ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
         super().__init__(x, y, player, angle)
+
+for cls in (EggLauncher, Crossbow, MachineGun, LaserCannon):
+    cls.load_attributes_from_config()
 
 TURRET_CHOICES = {
     0: EggLauncher, 

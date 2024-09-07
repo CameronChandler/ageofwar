@@ -60,11 +60,3 @@ class HealthMixin:
     def is_destroyed(self):
         """Check if the minion is destroyed (health <= 0)."""
         return self.health <= 0
-    
-    @property
-    def reward_xp():
-        raise NotImplementedError
-
-    @property
-    def reward_cash():
-        raise NotImplementedError

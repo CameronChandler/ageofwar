@@ -13,12 +13,6 @@ class Minion(GameObject, HealthMixin):
 
     def __init__(self, x, player):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''
-        self.image_path = config['image'][self.minion_id]
-        self.max_health = config['minion_stats'][self.minion_id]['max_health']
-        self.damage     = config['minion_stats'][self.minion_id]['damage']
-        self.cost       = config['minion_stats'][self.minion_id]['cost']
-        self.reward_xp  = config['minion_stats'][self.minion_id]['reward_xp']
-
         self.player = player
         
         self.image = pygame.image.load(self.image_path)
@@ -36,22 +30,6 @@ class Minion(GameObject, HealthMixin):
         self.time_to_attack = self.attack_interval
 
         super().__init__()
-
-    @property
-    def name():
-        raise NotImplementedError
-
-    @property
-    def cost():
-        raise NotImplementedError
-
-    @property
-    def training_time():
-        raise NotImplementedError
-
-    @property
-    def attack_interval():
-        raise NotImplementedError
 
     def _move(self, delta):
         """Move the minion forwards (to the right) by its speed."""
@@ -96,6 +74,15 @@ class Minion(GameObject, HealthMixin):
                 self.time_to_attack = self.attack_interval
             else:
                 self.time_to_attack -= object_manager.delta
+
+    @classmethod
+    def load_attributes_from_config(cls):
+        """Load static attributes for a specific minion type from the config."""
+        cls.image_path = config['image'][cls.minion_id]
+        cls.max_health = config['minion_stats'][cls.minion_id]['max_health']
+        cls.damage     = config['minion_stats'][cls.minion_id]['damage']
+        cls.cost       = config['minion_stats'][cls.minion_id]['cost']
+        cls.reward_xp  = config['minion_stats'][cls.minion_id]['reward_xp']
 
 class Chimp(Minion):
     minion_id = 'minion1'
@@ -227,6 +214,9 @@ class UFO(Minion):
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
+
+for cls in (Chimp, Clubman, Dino, Jester, Knight, Horse, Soldier, Rambo, Tank, Alien, Robot, UFO):
+    cls.load_attributes_from_config()
 
 MINION_CHOICES = {
     0: {'spawn_1': Chimp,   'spawn_2': Clubman, 'spawn_3': Dino},
