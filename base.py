@@ -2,6 +2,7 @@ import pygame
 import json
 from game_object import GameObject, HealthMixin
 from minion import Test1, Test2, Test3
+from turret import Turret
 
 with open('config.json', 'r') as file:
     config =  json.load(file)

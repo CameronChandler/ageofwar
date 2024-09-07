@@ -4,6 +4,7 @@ from base import P1Base, P2Base
 from game_object import HealthMixin
 from ui import UI
 from constants import BoxAction
+from turret import Turret1
 
 with open('config.json', 'r') as file:
     config =  json.load(file)
@@ -38,7 +39,6 @@ class ObjectManager:
                 pass
             elif action == BoxAction.POWER:
                 pass
-
 
     def update_objects(self, pressed_keys: set, ui_selections: list[tuple[int, BoxAction]]):
         self.pressed_keys = pressed_keys
@@ -88,6 +88,8 @@ class Game:
 
         self.bases = {1: P1Base(), 2: P2Base()}
         self.object_manager = ObjectManager(self.bases)
+        self.object_manager.add_object(Turret1(400, 400, 1))
+        self.object_manager.add_object(Turret1(1200, 400, 2))
 
         self.background_image = pygame.transform.scale(
             pygame.image.load(config['image']['background']), (self.screen_width, self.screen_height)
