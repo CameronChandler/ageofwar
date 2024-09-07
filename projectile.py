@@ -46,11 +46,38 @@ class Projectile(GameObject):
         """Handle what happens when the projectile hits a target."""
         target.health -= self.damage
 
-class Projectile1(Projectile):
+class Egg(Projectile):
     image_path = config['image']['projectile1']
-    image_size = (6, 2)
+    image_size = (7, 10)
     speed = 100
-    damage = 10
+    damage = 4
+
+    def __init__(self, x: float, y: float, angle: float, player: int):
+        super().__init__(x, y, angle, player)
+
+class Arrow(Projectile):
+    image_path = config['image']['projectile2']
+    image_size = (8, 2)
+    speed = 300
+    damage = 15
+
+    def __init__(self, x: float, y: float, angle: float, player: int):
+        super().__init__(x, y, angle, player)
+
+class Bullet(Projectile):
+    image_path = config['image']['projectile3']
+    image_size = (6, 2)
+    speed = 1000
+    damage = 20
+
+    def __init__(self, x: float, y: float, angle: float, player: int):
+        super().__init__(x, y, angle, player)
+
+class Laser(Projectile):
+    image_path = config['image']['projectile4']
+    image_size = (10, 3)
+    speed = 3000
+    damage = 30
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)

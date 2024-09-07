@@ -3,7 +3,7 @@ from game_object import GameObject
 import json
 from typing import Optional
 from math import atan2, degrees, copysign, sin, cos, radians
-from projectile import Projectile1
+from projectile import Egg, Arrow, Bullet, Laser
 
 with open('config.json', 'r') as file:
     config = json.load(file)
@@ -24,7 +24,6 @@ class Turret(GameObject):
         self.angle = 0
         if self.player == 2:
             self.angle += 180
-            self.speed = -self.speed
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
 
         self.attack_interval = 1 / self.bullets_per_second
@@ -55,15 +54,6 @@ class Turret(GameObject):
     @property
     def target_range():
         raise NotImplementedError
-    
-    # @property
-    # def muzzle_position(self):
-    #     """Calculate the position at the end of the turret barrel (muzzle) based on the angle."""
-    #     # Convert angle to radians and calculate muzzle position
-    #     barrel_length = self.image_size[0] // 2  # Half the width of the turret (assuming horizontal)
-    #     muzzle_x = self.x + barrel_length * cos(radians(self.angle))
-    #     muzzle_y = self.y + barrel_length * sin(radians(self.angle))
-    #     return muzzle_x, muzzle_y
     
     @property
     def muzzle_position(self):
@@ -106,7 +96,6 @@ class Turret(GameObject):
         muzzle_x, muzzle_y = self.muzzle_position
         object_manager.add_object(self.ProjectileClass(muzzle_x, muzzle_y, self.angle, self.player))
 
-
     def rotate_toward(self, target, delta):
         """Rotate the turret to point at the target and return the updated angle."""
         # Calculate the angle to the target in degrees
@@ -120,14 +109,10 @@ class Turret(GameObject):
             angle_diff -= 360
 
         # Rotate by a fraction of the angle difference based on rotational velocity
-        rotate_amount = self.rotational_velocity * delta  # Amount to rotate this frame
-        self.angle += copysign(min(abs(angle_diff), rotate_amount), angle_diff)  # Adjust current angle gradually
+        rotate_amount = self.rotational_velocity * delta
+        angle = self.angle + copysign(min(abs(angle_diff), rotate_amount), angle_diff)
 
-        # Keep the angle between 0 and 360 degrees
-        self.angle %= 360
-
-        # Return the updated angle
-        return self.angle
+        return angle % 360
     
     def draw(self, screen):
         self.image = pygame.transform.rotate(self.original_image, -self.angle)
@@ -149,20 +134,50 @@ class Turret(GameObject):
         else:
             self.time_to_attack -= object_manager.delta
 
-class Turret1(Turret):
+class EggLauncher(Turret):
     image_path = config['image']['turret1']
     image_size = (60, 10)
-    max_health = 100
-    speed = 100
-    damage = 10
+    bullets_per_second = 0.5
+    cost = 1
+    name = 'Egg Launcher'
+    target_range = 500
+    ProjectileClass = Egg
+
+    def __init__(self, x: float, y: float, player: int):
+        super().__init__(x, y, player)
+
+class Crossbow(Turret):
+    image_path = config['image']['turret2']
+    image_size = (60, 10)
     bullets_per_second = 1
     cost = 1
-    reward_xp = 1
-    reward_cash = 1
-    name = 'Turret1'
-    training_time = 2
+    name = 'Crossbow'
     target_range = 500
-    ProjectileClass = Projectile1
+    ProjectileClass = Arrow
+
+    def __init__(self, x: float, y: float, player: int):
+        super().__init__(x, y, player)
+
+class MachineGun(Turret):
+    image_path = config['image']['turret3']
+    image_size = (60, 10)
+    bullets_per_second = 5
+    cost = 1
+    name = 'Machine Gun'
+    target_range = 500
+    ProjectileClass = Bullet
+
+    def __init__(self, x: float, y: float, player: int):
+        super().__init__(x, y, player)
+
+class LaserCannon(Turret):
+    image_path = config['image']['turret4']
+    image_size = (60, 10)
+    bullets_per_second = 10
+    cost = 1
+    name = 'Laser Cannon'
+    target_range = 500
+    ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int):
         super().__init__(x, y, player)

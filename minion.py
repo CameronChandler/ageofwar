@@ -92,9 +92,9 @@ class Minion(GameObject, HealthMixin):
 class Test1(Minion):
     image_path = config['image']['minion1']
     image_size = (25, 50)
-    max_health = 100
+    max_health = 10
     speed = 100
-    damage = 10
+    damage = 1
     attack_interval = 0.5
     cost = 1
     reward_xp = 1
@@ -108,9 +108,9 @@ class Test1(Minion):
 class Test2(Minion):
     image_path = config['image']['minion2']
     image_size = (25, 50)
-    max_health = 100
+    max_health = 10
     speed = 100
-    damage = 10
+    damage = 1
     attack_interval = 0.5
     cost = 1
     reward_xp = 1
@@ -124,9 +124,9 @@ class Test2(Minion):
 class Test3(Minion):
     image_path = config['image']['minion3']
     image_size = (50, 50)
-    max_health = 100
+    max_health = 10
     speed = 100
-    damage = 10
+    damage = 1
     attack_interval = 0.5
     cost = 1
     reward_xp = 1
