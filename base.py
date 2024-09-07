@@ -2,7 +2,7 @@ import pygame
 import json
 from game_object import GameObject, HealthMixin
 from minion import Test1, Test2, Test3
-from turret import Turret
+from turret import EggLauncher, Crossbow, MachineGun, LaserCannon
 
 with open('config.json', 'r') as file:
     config = json.load(file)
@@ -27,6 +27,13 @@ MINION_CHOICES = {
     3: {'spawn_1': Test3, 'spawn_2': Test3, 'spawn_3': Test3},
 }
 
+TURRET_CHOICES = {
+    0: EggLauncher, 
+    1: Crossbow, 
+    2: MachineGun, 
+    3: LaserCannon
+}
+
 EVOLUTION_COST = config['evolution_costs']
 
 class Base(GameObject, HealthMixin):
@@ -45,7 +52,7 @@ class Base(GameObject, HealthMixin):
         self.rect = self.image.get_rect()
 
         offset = 10
-        self.x = offset if player == 1 else config['screen_width'] - self.image_size[0] - offset
+        self.x = {1: offset, 2: config['screen_width'] - self.image_size[0] - offset}[self.player]
         self.y = config['screen_height'] - self.image_size[1] - config['ground_height']
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
@@ -55,7 +62,11 @@ class Base(GameObject, HealthMixin):
 
         self.training_queue = []
         self.elapsed_training_time = 0
-        
+
+        self.turrets = {1: None, 2: None}
+        self.turret_x = self.x + {1: -10, 2: 10}[self.player]
+        self.turret_y = {1: self.y - 100, 2: self.y - 50}
+
         super().__init__()
 
     @property
@@ -95,6 +106,17 @@ class Base(GameObject, HealthMixin):
         self._check_player_input(object_manager)
         self._process_training_queue(object_manager)
 
+        for turret in self.turrets.values():
+            if turret is not None:
+                turret.update(object_manager)
+
+    def draw(self, screen):
+        for turret in self.turrets.values():
+            if turret is not None:
+                turret.draw(screen)
+
+        super().draw(screen)
+
     def _process_training_queue(self, object_manager):
         if not self.training_queue:
             return
@@ -113,6 +135,21 @@ class Base(GameObject, HealthMixin):
             current_minion_class = self.training_queue[0]
             queue_progress = self.elapsed_training_time / current_minion_class.training_time
         return queue_length, queue_progress
+    
+    def get_turret_cost(self, turret: int) -> int:
+        NewTurretClass = TURRET_CHOICES[self.evolution]
+        current_cost = 0 if self.turrets[turret] is None else self.turrets[turret].cost
+        return NewTurretClass.cost - current_cost
+    
+    def try_upgrade_turret(self, turret: int):
+        NewTurretClass = TURRET_CHOICES[self.evolution]
+        current_turret_is_worse = self.turrets[turret].__class__ != NewTurretClass
+        can_afford = self.budget - self.get_turret_cost(turret) >= 0
+
+        if current_turret_is_worse and can_afford:
+            self.budget -= self.get_turret_cost(turret)
+            del self.turrets[turret]
+            self.turrets[turret] = NewTurretClass(self.turret_x, self.turret_y[turret], self.player)
 
 class P1Base(Base):
     def __init__(self):

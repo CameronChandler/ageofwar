@@ -44,6 +44,7 @@ Turrets
     - In age Y player can upgrade spot x to turret Y
     - Hit space or enter to upgrade turret
 - Make sure killing enemy with turret gives reward
+- Make turret text yellow when you can afford it
 
 Powers
 - Volcano

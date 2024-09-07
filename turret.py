@@ -138,9 +138,9 @@ class EggLauncher(Turret):
     image_path = config['image']['turret1']
     image_size = (60, 10)
     bullets_per_second = 0.5
-    cost = 5
+    cost = 1
     name = 'Egg Launcher'
-    target_range = 500
+    target_range = 100
     ProjectileClass = Egg
 
     def __init__(self, x: float, y: float, player: int):
@@ -152,7 +152,7 @@ class Crossbow(Turret):
     bullets_per_second = 1
     cost = 1
     name = 'Crossbow'
-    target_range = 500
+    target_range = 200
     ProjectileClass = Arrow
 
     def __init__(self, x: float, y: float, player: int):
@@ -164,7 +164,7 @@ class MachineGun(Turret):
     bullets_per_second = 5
     cost = 1
     name = 'Machine Gun'
-    target_range = 500
+    target_range = 300
     ProjectileClass = Bullet
 
     def __init__(self, x: float, y: float, player: int):

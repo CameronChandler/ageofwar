@@ -38,9 +38,9 @@ class ObjectManager:
             if action == BoxAction.EVOLVE:
                 self.bases[player].try_evolve()
             elif action == BoxAction.TURRET_1:
-                pass
+                self.bases[player].try_upgrade_turret(1)
             elif action == BoxAction.TURRET_2:
-                pass
+                self.bases[player].try_upgrade_turret(2)
             elif action == BoxAction.POWER:
                 pass
 
@@ -102,8 +102,6 @@ class Game:
 
         self.bases = {1: P1Base(), 2: P2Base()}
         self.object_manager = ObjectManager(self.bases)
-        self.object_manager.add_object(EggLauncher(400, 400, 1))
-        self.object_manager.add_object(EggLauncher(1200, 400, 2))
 
         self.background_image = pygame.transform.scale(
             pygame.image.load(config['image']['background']), (self.screen_width, self.screen_height)
