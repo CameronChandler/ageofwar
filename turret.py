@@ -2,7 +2,7 @@ import pygame
 from game_object import GameObject
 import json
 from typing import Optional
-from math import atan2, degrees, copysign
+from math import atan2, degrees, copysign, sin, cos, radians
 from projectile import Projectile1
 
 with open('config.json', 'r') as file:
@@ -19,7 +19,7 @@ class Turret(GameObject):
         self.original_image = self.image.copy()
         
         self.x, self.y = x, y
-        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        self.rect = self.image.get_rect(center=(self.x, self.y))
         
         self.angle = 0
         if self.player == 2:
@@ -56,6 +56,31 @@ class Turret(GameObject):
     def target_range():
         raise NotImplementedError
     
+    # @property
+    # def muzzle_position(self):
+    #     """Calculate the position at the end of the turret barrel (muzzle) based on the angle."""
+    #     # Convert angle to radians and calculate muzzle position
+    #     barrel_length = self.image_size[0] // 2  # Half the width of the turret (assuming horizontal)
+    #     muzzle_x = self.x + barrel_length * cos(radians(self.angle))
+    #     muzzle_y = self.y + barrel_length * sin(radians(self.angle))
+    #     return muzzle_x, muzzle_y
+    
+    @property
+    def muzzle_position(self):
+        """Calculate the position at the end of the turret barrel (muzzle) based on the angle."""
+        # Get the turret's center
+        center_x = self.rect.centerx
+        center_y = self.rect.centery
+
+        # Barrel length from center to muzzle (half the width of the turret)
+        barrel_length = self.image_size[0] // 2
+
+        # Calculate muzzle position using the turret's angle
+        muzzle_x = center_x + barrel_length * cos(radians(self.angle))
+        muzzle_y = center_y + barrel_length * sin(radians(self.angle))
+
+        return muzzle_x, muzzle_y
+    
     def distance(self, obj1, obj2):
         return ((obj1.x - obj2.x) ** 2 + (obj1.y - obj2.y) ** 2) ** 0.5
 
@@ -68,7 +93,7 @@ class Turret(GameObject):
             parent_class_name = str(type(obj).__bases__)
             if not 'Minion' in parent_class_name and not 'Base' in parent_class_name:
                 continue
-            
+
             if obj.player != self.player:
                 distance = self.distance(self, obj)
                 if (distance < nearest_distance) & (distance < self.target_range):
@@ -78,7 +103,9 @@ class Turret(GameObject):
         return nearest_enemy
 
     def shoot(self, object_manager):
-        object_manager.add_object(self.ProjectileClass(self.x, self.y, self.angle, self.player))
+        muzzle_x, muzzle_y = self.muzzle_position
+        object_manager.add_object(self.ProjectileClass(muzzle_x, muzzle_y, self.angle, self.player))
+
 
     def rotate_toward(self, target, delta):
         """Rotate the turret to point at the target and return the updated angle."""
