@@ -9,7 +9,7 @@ with open(CONFIG_NAME, 'r') as file:
 
 class Minion(GameObject, HealthMixin):
     inflate_pixels = 30
-    speed = 75
+    speed = 150
 
     def __init__(self, x, player):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''

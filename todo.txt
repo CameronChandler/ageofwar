@@ -92,4 +92,4 @@ Rock paper scissors with fire/water/grass?
 Capture ground to incentivise spawning/pushing
 - Gain xp & $ - exponentially more with passing time
 
-Make turrets slightly cheaper
+bugfix - player 2 turret 2 sometimes spawns backwards

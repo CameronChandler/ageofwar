@@ -16,6 +16,9 @@ class Turret(GameObject):
         
         self.image = pygame.image.load(self.image_path)
         self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
+        if self.player == 2:
+            self.image = pygame.transform.flip(self.image, flip_x=False, flip_y=True)
+
         self.original_image = self.image.copy()
         
         self.x, self.y = x, y
@@ -24,6 +27,7 @@ class Turret(GameObject):
             self.x -= self.image_size[0]
         self.rect = self.image.get_rect(center=(self.x, self.y))
         
+        #self.angle = angle if angle is not None else {1: 0, 2: 180}[self.player] 
         self.angle = angle if angle is not None else 0        
         if self.player == 2:
             self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
@@ -32,6 +36,10 @@ class Turret(GameObject):
         self.time_to_attack = self.attack_interval
 
         super().__init__()
+
+    @property 
+    def adjusted_angle(self):
+        return self.angle + 180 if self.player == 2 else 0
     
     @property
     def muzzle_position(self):
@@ -121,7 +129,7 @@ class Turret(GameObject):
 class EggLauncher(Turret):
     rotational_velocity = 60 # degrees/second
     turret_id = 'turret1'
-    image_size = (60, 10)
+    image_size = (60, 30)
     bullets_per_second = 0.5
     target_range = 200
     ProjectileClass = Egg
@@ -135,7 +143,7 @@ class EggLauncher(Turret):
 class Crossbow(Turret):
     rotational_velocity = 90 # degrees/second
     turret_id = 'turret2'
-    image_size = (60, 10)
+    image_size = (60, 30)
     bullets_per_second = 1
     target_range = 250
     ProjectileClass = Arrow
@@ -146,7 +154,7 @@ class Crossbow(Turret):
 class MachineGun(Turret):
     rotational_velocity = 120 # degrees/second
     turret_id = 'turret3'
-    image_size = (60, 10)
+    image_size = (60, 30)
     bullets_per_second = 5
     target_range = 300
     ProjectileClass = Bullet
@@ -157,7 +165,7 @@ class MachineGun(Turret):
 class LaserCannon(Turret):
     rotational_velocity = 180 # degrees/second
     turret_id = 'turret4'
-    image_size = (60, 10)
+    image_size = (60, 30)
     bullets_per_second = 10
     target_range = 350
     ProjectileClass = Laser
