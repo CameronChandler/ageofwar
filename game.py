@@ -1,6 +1,7 @@
 import pygame
 import json
 from base import P1Base, P2Base
+from minion import Minion
 from game_object import HealthMixin
 from ui import UI
 from constants import BoxAction, CONFIG_NAME
@@ -11,13 +12,16 @@ with open(CONFIG_NAME, 'r') as file:
 DEBUG = config['debug']
 
 class ObjectManager:
-
+    
     def __init__(self, bases):
         self.objects = []
 
         self.bases = bases
         self.add_object(self.bases[1])
         self.add_object(self.bases[2])
+
+        self.furthest_minion = {1: P1Base.start_x, 2: P2Base.start_x}
+        self.captured_ground = {1: 0, 2: 0}
 
         self.last_update_time = pygame.time.get_ticks()
         self.pressed_keys = set()
@@ -43,6 +47,14 @@ class ObjectManager:
             elif action == BoxAction.POWER:
                 pass
 
+    def update_captured_ground(self):
+        """Update the captured ground based on minion positions."""
+        for obj in self.objects:
+            if isinstance(obj, Minion):
+                # Update captured ground to the max distance traveled by minions
+                self.captured_ground[obj.player] = max(self.captured_ground[obj.player], obj.x)
+
+
     def is_off_screen(self, obj):
         threshold = 500  # Pixels off-screen threshold
         return (
@@ -65,6 +77,8 @@ class ObjectManager:
         self.last_update_time = current_time
 
         self.handle_ui_selections(ui_selections)
+
+        self.update_captured_ground()
 
     def handle_death(self, obj):
         """Handle the death of an object, including removal and player rewards."""

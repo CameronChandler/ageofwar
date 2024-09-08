@@ -58,6 +58,7 @@ class MinionBox:
 class ActionBox:
     size = 80
     padding = 30
+    line_width = 4
     
     def __init__(self, x, y, action, player):
         self.x = x
@@ -89,7 +90,7 @@ class ActionBox:
 
     def draw(self, screen, base):
         color = Color.YELLOW if self.selected else Color.GREY
-        pygame.draw.rect(screen, color, self.rect, 4)
+        pygame.draw.rect(screen, color, self.rect, self.line_width)
         font = pygame.font.Font(None, 24)
         lines = self.get_text(base).split('\n')
 
