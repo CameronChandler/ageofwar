@@ -1,14 +1,3 @@
-Evolution
-- New minion groups
-
-Damage
-X Minions stop before enemies
-X Minions attack enemies
-X Minions deal Damage
-X Minions die with no health
-X Killing minions grants other player money and xp
-X Bases have health that displays
-
 Main Menu
 - Controls
 - Title Screen
@@ -20,33 +9,6 @@ Sounds
 - Victory
 - Music
 - Shin-kicker?
-
-UI
-X UI shows unit images
-X Display training queue
-X Display Turret/Evolve/Power options
-X Select Options
-X Evolve button glows with sufficient XP
-- Buttons show costs (possible only when selected, but probs jsut always is easier)
-[Evolve] [Turret 1] -> Could have these expand with options when hovered over
-[Power ] [Turret 2]
-         [Turret 3]
-X Display costs
-- Display unit costs
-
-Turrets
-X Fire projectiles at nearest target in range
-X Rotate to track nearest target and shoot
-X Egg launcher
-X Crossbow
-X Machine gun!
-X Laser beam
-X Add UI for selecting and buying turrets
-X Each player has X turret spots, UI shows X gaps for upgrading turrets
-    - In age Y player can upgrade spot x to turret Y
-    - Hit space or enter to upgrade turret
-X Make sure killing enemy with turret gives reward
-X Make turret text yellow when you can afford it
 
 Powers
 - Volcano
@@ -79,17 +41,7 @@ Avoiding stale mates
 - Allow XP advantage to snowball - what else can be gained from advantages in cash/xp to quickly end game?
     - Expensive OP troops/turrets?
 
-
-####
-Turrets should be part of bases (so when bases disappear so do turrets)
-- This means that bases should call draw on turrets
-But bullets should be owned directly by the object manager
-
-Finish test config
-
 Rock paper scissors with fire/water/grass?
 
 Capture ground to incentivise spawning/pushing
 - Gain xp & $ - exponentially more with passing time
-
-bugfix - player 2 turret 2 sometimes spawns backwards
