@@ -7,6 +7,54 @@ with open(CONFIG_NAME, 'r') as file:
 
 EVOLUTION_COST = {evolution: cost for evolution, cost in enumerate(config['evolution_costs'])}
 
+
+class MinionBox:
+    size = 70
+    text_box_size = 30
+    padding = 20
+    line_width = 4
+
+    def __init__(self, x, y, player: int):
+        self.x = x
+        self.y = y
+        self.player = player
+        self.rect = pygame.Rect(x, y, self.size, self.size)
+        self.selected = False
+        self.box_color = Color.GREY
+
+    def draw_box(self, screen):
+        pygame.draw.rect(screen, self.box_color, self.rect, self.line_width)
+
+        y = self.y - self.text_box_size + self.line_width
+        pygame.draw.rect(screen, self.box_color, (self.x, y, self.size, self.text_box_size), self.line_width)
+
+    def draw_minion(self, screen, MinionClass):
+        image = pygame.image.load(MinionClass.image_path)
+        rect = image.get_rect(topleft=(0, 0))
+        original_length = max(rect.width, rect.height)
+        new_size = (
+            (0.8 * self.size * rect.width ) // original_length,
+            (0.8 * self.size * rect.height) // original_length
+        )
+
+        image = pygame.transform.scale(image, new_size)
+        image_x = self.x + (self.size - new_size[0]) // 2
+        image_y = self.y + (self.size - new_size[1]) // 2
+        screen.blit(image, (image_x, image_y))
+
+    def draw_price(self, screen, cost: int, color):
+        font = pygame.font.Font(None, 24)
+
+        text = font.render(f'${cost}', True, color)
+        rect = text.get_rect(center=(self.x + self.size/2, self.y - self.text_box_size/2 + self.line_width))
+        screen.blit(text, rect)
+
+    def draw(self, screen, base, MinionClass):
+        self.draw_box(screen)
+        self.draw_minion(screen, MinionClass)
+        color = Color.YELLOW if base.budget >= MinionClass.cost else Color.GREY
+        self.draw_price(screen, MinionClass.cost, color)
+
 class ActionBox:
     size = 80
     padding = 30
@@ -64,17 +112,20 @@ class UI:
 
         self.font = pygame.font.Font(None, 36)
 
-        # Create 2x2 grids of boxes for each player
+        self.initialise_action_boxes()
+        self.initialise_minion_boxes()
+
+    def initialise_action_boxes(self):
         x1, x2 = ActionBox.padding, 2*ActionBox.padding + ActionBox.size
         y1 = 100
         y2 = y1 + ActionBox.padding + ActionBox.size
-        self.boxes_p1 = [
+        self.action_boxes_p1 = [
             [ActionBox(x1, y1, BoxAction.EVOLVE, player=1),  ActionBox(x2, y1, BoxAction.TURRET_1, player=1)],
             [ActionBox(x1, y2, BoxAction.POWER , player=1),  ActionBox(x2, y2, BoxAction.TURRET_2, player=1)]
         ]
-        x1 = screen_width - 2*(ActionBox.padding + ActionBox.size)
-        x2 = screen_width - ActionBox.padding - ActionBox.size
-        self.boxes_p2 = [
+        x1 = self.screen_width - 2*(ActionBox.padding + ActionBox.size)
+        x2 = self.screen_width - ActionBox.padding - ActionBox.size
+        self.action_boxes_p2 = [
             [ActionBox(x1, y1, BoxAction.EVOLVE, player=2), ActionBox(x2, y1, BoxAction.TURRET_1, player=2)],
             [ActionBox(x1, y2, BoxAction.POWER , player=2), ActionBox(x2, y2, BoxAction.TURRET_2, player=2)]
         ]
@@ -82,10 +133,31 @@ class UI:
         self.selected_box_p1 = (0, 0)
         self.selected_box_p2 = (0, 0)
 
-    def draw_boxes(self):
-        for row in self.boxes_p1 + self.boxes_p2:
+    def initialise_minion_boxes(self):
+        num_minion_choices = len(self.bases[1].minion_choices)
+        x = 380
+        y = 40
+
+        unit_width = MinionBox.size + MinionBox.padding
+        xs = [x + i*unit_width for i in range(num_minion_choices)]
+        self.minion_boxes_p1 = [MinionBox(xs[i], y, player=1) for i in range(num_minion_choices)]
+
+        xs = [self.screen_width - x - (num_minion_choices - 2 + i)*unit_width for i in range(num_minion_choices)]
+        self.minion_boxes_p2 = [MinionBox(xs[i], y, player=2) for i in range(num_minion_choices)]
+
+    def draw_action_boxes(self):
+        for row in self.action_boxes_p1 + self.action_boxes_p2:
             for box in row:
                 box.draw(self.screen, self.bases[box.player])
+
+    def draw_minion_boxes(self):
+        minion_boxes = self.minion_boxes_p1 + self.minion_boxes_p2
+        minion_choices = (
+            list(self.bases[1].minion_choices.values()) + 
+            list(self.bases[2].minion_choices.values())
+        )
+        for box, MinonClass in zip(minion_boxes, minion_choices):
+            box.draw(self.screen, self.bases[box.player], MinonClass)
 
     def update_selection(self, pressed_keys, keys, selected_box):
         row, col = selected_box
@@ -101,11 +173,11 @@ class UI:
         self.selected_box_p2 = self.update_selection(pressed_keys, P2_KEYS, self.selected_box_p2)
 
         # Update box highlighting
-        for i, row in enumerate(self.boxes_p1):
+        for i, row in enumerate(self.action_boxes_p1):
             for j, box in enumerate(row):
                 box.selected = (i, j) == self.selected_box_p1
 
-        for i, row in enumerate(self.boxes_p2):
+        for i, row in enumerate(self.action_boxes_p2):
             for j, box in enumerate(row):
                 box.selected = (i, j) == self.selected_box_p2
 
@@ -113,51 +185,15 @@ class UI:
         # If players make selection
         if pygame.K_SPACE in pressed_keys:
             row, col = self.selected_box_p1
-            box = self.boxes_p1[row][col]
+            box = self.action_boxes_p1[row][col]
             ui_selections.append((box.player, box.action))
 
         if pygame.K_RETURN in pressed_keys:
             row, col = self.selected_box_p2
-            box = self.boxes_p2[row][col]
+            box = self.action_boxes_p2[row][col]
             ui_selections.append((box.player, box.action))
 
         return ui_selections
-
-    def draw_minion_choices(self):
-        for player in (1, 2):
-            minion_choices = list(self.bases[player].minion_choices.values())
-            box_width = 70
-            padding = 20
-            
-            for i, minion_type in enumerate(minion_choices):
-                image = pygame.image.load(minion_type.image_path)
-                rect = image.get_rect(topleft=(0, 0))
-                original_length = max(rect.width, rect.height)
-                new_size = (
-                    (0.8 * box_width * rect.width ) // original_length,
-                    (0.8 * box_width * rect.height) // original_length
-                )
-
-                image = pygame.transform.scale(image, new_size)
-                x = 380
-                offset = (x if player == 1 else self.screen_width - x - len(minion_choices)*(box_width + padding))
-                box_x = offset + i*(box_width + padding)
-                box_y = 40
-                image_x = box_x + (box_width - new_size[0]) // 2
-                image_y = box_y + (box_width - new_size[1]) // 2
-                self.screen.blit(image, (image_x, image_y))
-
-                line_width = 4
-                pygame.draw.rect(self.screen, Color.GREY, (box_x, box_y, box_width, box_width), line_width)
-
-                text_box_height = 30
-                color = Color.YELLOW #if self.selected else Color.GREY
-                pygame.draw.rect(self.screen, Color.GREY, (box_x, box_y-text_box_height+line_width, box_width, text_box_height), line_width)
-                font = pygame.font.Font(None, 24)
-
-                text = font.render(f'${minion_type.cost}', True, color)
-                rect = text.get_rect(center=(box_x + box_width/2, box_y - text_box_height/2 + line_width))
-                self.screen.blit(text, rect)
 
     def draw_budget(self):
         x_pos = 50
@@ -212,6 +248,6 @@ class UI:
     def draw(self):
         self.draw_budget()
         self.draw_xp()
-        self.draw_minion_choices()
+        self.draw_minion_boxes()
         self.draw_training_queues()
-        self.draw_boxes()
+        self.draw_action_boxes()
