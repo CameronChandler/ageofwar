@@ -7,7 +7,7 @@ with open(CONFIG_NAME, 'r') as file:
 
 EVOLUTION_COST = {evolution: cost for evolution, cost in enumerate(config['evolution_costs'])}
 
-class Box:
+class ActionBox:
     size = 80
     padding = 30
     
@@ -65,17 +65,18 @@ class UI:
         self.font = pygame.font.Font(None, 36)
 
         # Create 2x2 grids of boxes for each player
-        x1, x2 = Box.padding, 2*Box.padding + Box.size
+        x1, x2 = ActionBox.padding, 2*ActionBox.padding + ActionBox.size
         y1 = 100
-        y2 = y1 + Box.padding + Box.size
+        y2 = y1 + ActionBox.padding + ActionBox.size
         self.boxes_p1 = [
-            [Box(x1, y1, BoxAction.EVOLVE, player=1),  Box(x2, y1, BoxAction.TURRET_1, player=1)],
-            [Box(x1, y2, BoxAction.POWER , player=1),  Box(x2, y2, BoxAction.TURRET_2, player=1)]
+            [ActionBox(x1, y1, BoxAction.EVOLVE, player=1),  ActionBox(x2, y1, BoxAction.TURRET_1, player=1)],
+            [ActionBox(x1, y2, BoxAction.POWER , player=1),  ActionBox(x2, y2, BoxAction.TURRET_2, player=1)]
         ]
-        x1, x2 = screen_width - 2*(Box.padding + Box.size), screen_width - Box.padding - Box.size, 
+        x1 = screen_width - 2*(ActionBox.padding + ActionBox.size)
+        x2 = screen_width - ActionBox.padding - ActionBox.size
         self.boxes_p2 = [
-            [Box(x1, y1, BoxAction.EVOLVE, player=2), Box(x2, y1, BoxAction.TURRET_1, player=2)],
-            [Box(x1, y2, BoxAction.POWER , player=2), Box(x2, y2, BoxAction.TURRET_2, player=2)]
+            [ActionBox(x1, y1, BoxAction.EVOLVE, player=2), ActionBox(x2, y1, BoxAction.TURRET_1, player=2)],
+            [ActionBox(x1, y2, BoxAction.POWER , player=2), ActionBox(x2, y2, BoxAction.TURRET_2, player=2)]
         ]
 
         self.selected_box_p1 = (0, 0)
@@ -125,7 +126,7 @@ class UI:
     def draw_minion_choices(self):
         for player in (1, 2):
             minion_choices = list(self.bases[player].minion_choices.values())
-            box_width = 50
+            box_width = 70
             padding = 20
             
             for i, minion_type in enumerate(minion_choices):
@@ -141,12 +142,22 @@ class UI:
                 x = 380
                 offset = (x if player == 1 else self.screen_width - x - len(minion_choices)*(box_width + padding))
                 box_x = offset + i*(box_width + padding)
-                box_y = 10
+                box_y = 40
                 image_x = box_x + (box_width - new_size[0]) // 2
                 image_y = box_y + (box_width - new_size[1]) // 2
                 self.screen.blit(image, (image_x, image_y))
 
-                pygame.draw.rect(self.screen, Color.GREY, (box_x, box_y, box_width, box_width), 4)
+                line_width = 4
+                pygame.draw.rect(self.screen, Color.GREY, (box_x, box_y, box_width, box_width), line_width)
+
+                text_box_height = 30
+                color = Color.YELLOW #if self.selected else Color.GREY
+                pygame.draw.rect(self.screen, Color.GREY, (box_x, box_y-text_box_height+line_width, box_width, text_box_height), line_width)
+                font = pygame.font.Font(None, 24)
+
+                text = font.render(f'${minion_type.cost}', True, color)
+                rect = text.get_rect(center=(box_x + box_width/2, box_y - text_box_height/2 + line_width))
+                self.screen.blit(text, rect)
 
     def draw_budget(self):
         x_pos = 50
