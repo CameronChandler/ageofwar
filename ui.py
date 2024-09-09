@@ -141,7 +141,10 @@ class UI:
         xs = [x + i*unit_width for i in range(num_minion_choices)]
         self.minion_boxes_p1 = [MinionBox(xs[i], y, player=1) for i in range(num_minion_choices)]
 
-        xs = [config['screen_width'] - x - (num_minion_choices - 2 + i)*unit_width for i in range(num_minion_choices)]
+        xs = [
+            config['screen_width'] - x - (num_minion_choices - 2 + i)*unit_width 
+            for i in range(num_minion_choices)
+        ][::-1]
         self.minion_boxes_p2 = [MinionBox(xs[i], y, player=2) for i in range(num_minion_choices)]
 
     def draw_action_boxes(self):
