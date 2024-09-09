@@ -11,6 +11,7 @@ with open(CONFIG_NAME, 'r') as file:
 
 DEBUG = config['debug']
 
+
 class ObjectManager:
     
     def __init__(self, bases):
@@ -91,6 +92,7 @@ class ObjectManager:
 
                 if DEBUG:
                     obj.draw_collision_rect(screen)
+
 
 class Game:
     def __init__(self):

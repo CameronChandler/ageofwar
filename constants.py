@@ -20,7 +20,7 @@ class Color(ValueEnum):
     
 class BoxAction(ValueEnum):
     EVOLVE = 'Evolve'
-    POWER = 'Power'
+    POWER  = 'Power'
     TURRET_1 = 'Turret 1'
     TURRET_2 = 'Turret 2'
 

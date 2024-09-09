@@ -55,6 +55,7 @@ class MinionBox:
         color = Color.YELLOW if base.budget >= MinionClass.cost else Color.GREY
         self.draw_price(screen, MinionClass.cost, color)
 
+
 class ActionBox:
     size = 80
     padding = 30
@@ -102,6 +103,7 @@ class ActionBox:
                 y_pos += i*y_offset - y_offset/3
             action_rect = action_text.get_rect(center=(self.rect.centerx, y_pos))
             screen.blit(action_text, action_rect)
+
 
 class UI:
 

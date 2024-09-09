@@ -155,9 +155,11 @@ class Base(GameObject, HealthMixin):
             del self.turrets[turret]
             self.turrets[turret] = NewTurretClass(self.turret_x, self.turret_y[turret], self.player, angle)
 
+
 class P1Base(Base):
     def __init__(self):
         super().__init__(player=1)
+
 
 class P2Base(Base):
     def __init__(self):

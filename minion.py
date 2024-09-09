@@ -7,6 +7,7 @@ from constants import CONFIG_NAME
 with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
+
 class Minion(GameObject, HealthMixin):
     inflate_pixels = 30
     speed = 150
@@ -89,6 +90,7 @@ class Minion(GameObject, HealthMixin):
         cls.damage     = config['minion_stats'][cls.minion_id]['damage']
         cls.cost       = config['minion_stats'][cls.minion_id]['cost']
         cls.reward_xp  = config['minion_stats'][cls.minion_id]['reward_xp']
+
 
 class Chimp(Minion):
     minion_id = 'minion1'

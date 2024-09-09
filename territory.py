@@ -1,21 +1,40 @@
 import pygame
 import json
-from base import P1Base, P2Base
 from minion import Minion
-from game_object import HealthMixin
-from ui import UI
-from constants import BoxAction, CONFIG_NAME, Color
+from constants import CONFIG_NAME, Color
+from math import exp
 
 with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
+
 class TerritoryManager:
+    reward_interval = 7 # seconds
 
     def __init__(self, base1_x, base2_x):
         self.territory = {
             1: Territory(base1_x, player=1), 
             2: Territory(base2_x, player=2)
         }
+        self.time_to_reward = self.reward_interval
+        self.time_elapsed = 0
+
+    @property
+    def base_reward(self, a=0.023, b=0.2):
+        ''' Reward for owning the whole screen '''
+        return int( exp(a*self.time_elapsed) + b*self.time_elapsed )
+    
+    def reward(self):
+        pass
+    
+    def handle_rewards(self, delta):
+        self.time_elapsed += delta
+        self.time_to_reward -= delta
+
+        if self.time_to_reward < 0:
+            self.reward()
+            print(self.base_reward, self.time_elapsed)
+            self.time_to_reward = self.reward_interval
 
     def get_furthest_minion_x(self, objects: list) -> dict[int: int]:
         furthest_minion_x = {p: self.territory[p].base_x for p in (1, 2)}
@@ -42,6 +61,9 @@ class TerritoryManager:
 
         elif furthest_minion_x[2] < self.territory[1].cap_x:
             self.territory[1].cap_x = furthest_minion_x[2]
+
+        # Handle rewards
+        self.handle_rewards(object_manager.delta)
 
     def draw(self, screen):
         for territory in self.territory.values():
