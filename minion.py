@@ -31,6 +31,12 @@ class Minion(GameObject, HealthMixin):
 
         super().__init__()
 
+    @property
+    def front_x(self):
+        if self.player == 1:
+            return self.x + self.image_size[0]
+        return self.x
+
     def _move(self, delta):
         """Move the minion forwards (to the right) by its speed."""
         self.x += self.speed * delta

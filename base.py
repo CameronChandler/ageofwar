@@ -40,6 +40,7 @@ class Base(GameObject, HealthMixin):
         self.rect = self.image.get_rect()
 
         self.x = {1: self.offset, 2: config['screen_width'] - self.image_size[0] - self.offset}[self.player]
+        self.front_x = {1: self.x + self.image_size[0], 2: self.x}[self.player]
         self.y = config['screen_height'] - self.image_size[1] - config['ground_height']
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
@@ -57,13 +58,6 @@ class Base(GameObject, HealthMixin):
         self.turret_y = {1: self.y - 100, 2: self.y - 50}
 
         super().__init__()
-
-    @property
-    def start_x(self):
-        return {
-            1: Base.image_size[0] + Base.offset,
-            2: config['screen_width'] - Base.image_size[0] - Base.offset
-        }[self.player]
 
     @property
     def minion_choices(self):

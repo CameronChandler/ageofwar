@@ -4,7 +4,7 @@ from base import P1Base, P2Base
 from minion import Minion
 from game_object import HealthMixin
 from ui import UI
-from constants import BoxAction, CONFIG_NAME
+from constants import BoxAction, CONFIG_NAME, Color
 
 with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
@@ -20,14 +20,19 @@ class ObjectManager:
         self.add_object(self.bases[1])
         self.add_object(self.bases[2])
 
-        self.furthest_minion = {1: P1Base.start_x, 2: P2Base.start_x}
-        self.captured_ground = {1: 0, 2: 0}
+        # x tracks the actual x position, score tracks what this represents
+        self.captured_ground_x = {1: self.bases[1].front_x, 2: self.bases[2].front_x}
 
         self.last_update_time = pygame.time.get_ticks()
         self.pressed_keys = set()
 
         self.screen_width = config['screen_width']
         self.screen_height = config['screen_height']
+
+    def get_captured_ground_score(self, player: int):
+        if player == 1:
+            return self.captured_ground_x[1]
+        return config['screen_width'] - self.captured_ground_x[2]
 
     def add_object(self, obj):
         self.objects.append(obj)
@@ -49,11 +54,24 @@ class ObjectManager:
 
     def update_captured_ground(self):
         """Update the captured ground based on minion positions."""
+        furthest_minion = {p: self.bases[p].front_x for p in (1, 2)}
         for obj in self.objects:
             if isinstance(obj, Minion):
-                # Update captured ground to the max distance traveled by minions
-                self.captured_ground[obj.player] = max(self.captured_ground[obj.player], obj.x)
+                if obj.player == 1:
+                    furthest_minion[1] = max(obj.front_x, furthest_minion[1])
+                else:
+                    furthest_minion[2] = min(obj.front_x, furthest_minion[2])
+                
+        # Update with furthest minions
+        self.captured_ground_x[1] = max(furthest_minion[1], self.captured_ground_x[1])
+        self.captured_ground_x[2] = min(furthest_minion[2], self.captured_ground_x[2])
 
+        # Account for minions capping opponent land
+        if furthest_minion[1] > self.captured_ground_x[2]:
+            self.captured_ground_x[2] = furthest_minion[1]
+
+        elif furthest_minion[2] < self.captured_ground_x[1]:
+            self.captured_ground_x[1] = furthest_minion[2]
 
     def is_off_screen(self, obj):
         threshold = 500  # Pixels off-screen threshold
@@ -92,6 +110,23 @@ class ObjectManager:
         self.bases[player].xp     += xp
         self.bases[player].budget += cash
 
+    def draw_captured_ground(self, screen):
+        y = config['screen_height'] - config['ground_height'] 
+        height = 10
+
+        for player, color in [(1, Color.BLUE), (2, Color.RED)]:
+            w2 = config['screen_width'] - self.get_captured_ground_score(player=2)
+            box = {
+                1: ( 0, y, self.captured_ground_x[1], height),
+                2: (w2, y, self.get_captured_ground_score(player=2), height),
+            }[player]
+            #pygame.draw.rect(screen, color, box)
+
+            surface = pygame.Surface((box[2], box[3]), pygame.SRCALPHA)
+    
+            surface.fill((*color, 192))  # RGBA
+            screen.blit(surface, box)
+
     def draw_objects(self, screen):
         for obj in sorted(self.objects, key=lambda o: o.zorder):
             if obj.to_draw:
@@ -102,6 +137,8 @@ class ObjectManager:
 
                 if DEBUG:
                     obj.draw_collision_rect(screen)
+
+        self.draw_captured_ground(screen)
 
 class Game:
     def __init__(self):
