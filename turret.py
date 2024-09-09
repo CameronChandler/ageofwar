@@ -27,19 +27,12 @@ class Turret(GameObject):
             self.x -= self.image_size[0]
         self.rect = self.image.get_rect(center=(self.x, self.y))
         
-        #self.angle = angle if angle is not None else {1: 0, 2: 180}[self.player] 
-        self.angle = angle if angle is not None else 0        
-        if self.player == 2:
-            self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
+        self.angle = angle if angle is not None else {1: 0, 2: 180}[self.player] 
 
         self.attack_interval = 1 / self.bullets_per_second
         self.time_to_attack = self.attack_interval
 
         super().__init__()
-
-    @property 
-    def adjusted_angle(self):
-        return self.angle + 180 if self.player == 2 else 0
     
     @property
     def muzzle_position(self):
@@ -136,9 +129,6 @@ class EggLauncher(Turret):
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
         super().__init__(x, y, player, angle)
-
-        if player == 2:
-            self.angle += 180
 
 class Crossbow(Turret):
     rotational_velocity = 90 # degrees/second

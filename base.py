@@ -28,6 +28,7 @@ class Base(GameObject, HealthMixin):
     inflate_pixels = 70
     reward_xp = 1e6
     reward_cash = 1e6
+    offset = 10
     image_size = (100, 100)
     max_health = 100
 
@@ -38,8 +39,8 @@ class Base(GameObject, HealthMixin):
         self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
         self.rect = self.image.get_rect()
 
-        offset = 10
-        self.x = {1: offset, 2: config['screen_width'] - self.image_size[0] - offset}[self.player]
+        self.x = {1: self.offset, 2: config['screen_width'] - self.image_size[0] - self.offset}[self.player]
+        self.front_x = {1: self.x + self.image_size[0], 2: self.x}[self.player]
         self.y = config['screen_height'] - self.image_size[1] - config['ground_height']
         self.rect.topleft = (self.x, self.y)
         self.zorder = 100
