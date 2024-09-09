@@ -2,7 +2,7 @@ import pygame
 import json
 from minion import Minion
 from constants import CONFIG_NAME, Color
-from math import exp
+from math import exp, cos, pi
 
 with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
@@ -19,6 +19,12 @@ class TerritoryManager:
         }
         self.time_to_reward = self.reward_interval
         self.time_elapsed = 0
+
+    @property
+    def pulse_strength(self):
+        # max avoids first pulse
+        x = max(self.reward_interval/2, self.time_elapsed)
+        return cos(pi * x / self.reward_interval) ** 150
 
     @property
     def base_reward(self, a=0.023, b=0.2):
@@ -76,7 +82,7 @@ class TerritoryManager:
 
     def draw(self, screen):
         for territory in self.territory.values():
-            territory.draw(screen)
+            territory.draw(screen, self.pulse_strength)
 
 
 class Territory:
@@ -98,7 +104,13 @@ class Territory:
         score = self.cap_x if self.player == 1 else config['screen_width'] - self.cap_x
         return max(0, score)
     
-    def draw(self, screen):
+    def interpolate_color(self, c1, c2, factor):
+        return tuple(
+            int(c1[i] + (c2[i] - c1[i]) * factor) for i in range(3)
+        )
+    
+    def draw(self, screen, pulse_strength: float):
+        ''' Pulse strength in [0, 1] '''
         if self.player == 1:
             box = (0, self.y, self.cap_x, self.height)
         else:
@@ -107,5 +119,9 @@ class Territory:
 
         surface = pygame.Surface((box[2], box[3]), pygame.SRCALPHA)
 
-        surface.fill((*self.color['default'], 192))  # RGBA
+        pulse_color = self.interpolate_color(
+            self.color['default'], self.color['bright'], pulse_strength
+        )
+
+        surface.fill((*pulse_color, 192))  # RGBA
         screen.blit(surface, box)

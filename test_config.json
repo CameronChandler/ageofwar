@@ -29,7 +29,7 @@
     },
     "evolution_costs": [1, 2, 3],
     "minion_stats": {
-        "minion1" : {"max_health": 15, "damage": 20, "cost": 1, "reward_xp": 5},
+        "minion1" : {"max_health": 15, "damage": 2, "cost": 1, "reward_xp": 5},
         "minion2" : {"max_health": 15, "damage": 2, "cost": 1, "reward_xp": 5},
         "minion3" : {"max_health": 15, "damage": 2, "cost": 1, "reward_xp": 5},
         "minion4" : {"max_health": 15, "damage": 2, "cost": 1, "reward_xp": 5},
