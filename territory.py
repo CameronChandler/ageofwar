@@ -10,6 +10,7 @@ with open(CONFIG_NAME, 'r') as file:
 
 class TerritoryManager:
     reward_interval = 7 # seconds
+    max_captured = config['screen_width']
 
     def __init__(self, base1_x, base2_x):
         self.territory = {
@@ -22,18 +23,22 @@ class TerritoryManager:
     @property
     def base_reward(self, a=0.023, b=0.2):
         ''' Reward for owning the whole screen '''
-        return int( exp(a*self.time_elapsed) + b*self.time_elapsed )
+        return exp(a*self.time_elapsed) + b*self.time_elapsed
     
-    def reward(self):
-        pass
+    def reward(self, object_manager):
+        for player in (1, 2):
+            captured = self.territory[player].get_captured_ground_score()
+            prop_captured = captured / self.max_captured
+            reward = max(1, int(prop_captured * self.base_reward))
+            object_manager.reward_player(player, xp=0, cash=reward)
     
-    def handle_rewards(self, delta):
-        self.time_elapsed += delta
-        self.time_to_reward -= delta
+    def handle_rewards(self, object_manager):
+        self.time_elapsed += object_manager.delta
+        self.time_to_reward -= object_manager.delta
 
         if self.time_to_reward < 0:
-            self.reward()
-            print(self.base_reward, self.time_elapsed)
+            self.reward(object_manager)
+            print(f'Base Reward: {self.base_reward}, Time: {self.time_elapsed}')
             self.time_to_reward = self.reward_interval
 
     def get_furthest_minion_x(self, objects: list) -> dict[int: int]:
@@ -56,14 +61,18 @@ class TerritoryManager:
         self.territory[2].cap_x = min(furthest_minion_x[2], self.territory[2].cap_x)
 
         # Account for minions capping opponent land
+        #### Note that currently minions don't cap past base because
+        #### the base is counted as the furthest minion,
+        #### so these equalities won't allow attacker color to be drawn
+        #### Would need to add case for victory or being past base_x
         if furthest_minion_x[1] > self.territory[2].cap_x:
             self.territory[2].cap_x = furthest_minion_x[1]
 
-        elif furthest_minion_x[2] < self.territory[1].cap_x:
+        if furthest_minion_x[2] < self.territory[1].cap_x:
             self.territory[1].cap_x = furthest_minion_x[2]
-
+            
         # Handle rewards
-        self.handle_rewards(object_manager.delta)
+        self.handle_rewards(object_manager)
 
     def draw(self, screen):
         for territory in self.territory.values():
@@ -86,9 +95,8 @@ class Territory:
 
     def get_captured_ground_score(self):
         """Return the current captured ground score for the player."""
-        if self.player == 1:
-            return self.cap_x
-        return config['screen_width'] - self.cap_x
+        score = self.cap_x if self.player == 1 else config['screen_width'] - self.cap_x
+        return max(0, score)
     
     def draw(self, screen):
         if self.player == 1:
