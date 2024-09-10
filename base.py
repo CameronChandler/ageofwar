@@ -30,7 +30,7 @@ class Base(GameObject, HealthMixin):
     reward_cash = 1e6
     offset = 10
     image_size = (100, 100)
-    max_health = 100
+    max_health = 1000
 
     def __init__(self, player):
         self.player = player

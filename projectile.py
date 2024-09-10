@@ -50,8 +50,8 @@ class Projectile(GameObject):
 class Egg(Projectile):
     image_path = config['image']['projectile1']
     image_size = (7, 10)
-    speed = 100
-    damage = 4
+    speed = 200
+    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)
@@ -59,8 +59,8 @@ class Egg(Projectile):
 class Arrow(Projectile):
     image_path = config['image']['projectile2']
     image_size = (8, 2)
-    speed = 200
-    damage = 6
+    speed = 400
+    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)
@@ -68,8 +68,8 @@ class Arrow(Projectile):
 class Bullet(Projectile):
     image_path = config['image']['projectile3']
     image_size = (6, 2)
-    speed = 400
-    damage = 8
+    speed = 600
+    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)
@@ -77,7 +77,7 @@ class Bullet(Projectile):
 class Laser(Projectile):
     image_path = config['image']['projectile4']
     image_size = (10, 3)
-    speed = 800
+    speed = 1000
     damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):

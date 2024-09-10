@@ -79,7 +79,7 @@ class Turret(GameObject):
         """Rotate the turret to point at the target and return the updated angle."""
         # Calculate the angle to the target in degrees
         dx = target.x - self.x
-        dy = target.y - self.y
+        dy = target.y - self.y + 7 # Aim a bit below target's center
         desired_angle = degrees(atan2(dy, dx))
 
         # Calculate the difference between the current angle and the target angle
@@ -124,7 +124,7 @@ class EggLauncher(Turret):
     turret_id = 'turret1'
     image_size = (60, 30)
     bullets_per_second = 0.5
-    target_range = 200
+    target_range = 400
     ProjectileClass = Egg
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -135,7 +135,7 @@ class Crossbow(Turret):
     turret_id = 'turret2'
     image_size = (60, 30)
     bullets_per_second = 1
-    target_range = 250
+    target_range = 500
     ProjectileClass = Arrow
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -146,7 +146,7 @@ class MachineGun(Turret):
     turret_id = 'turret3'
     image_size = (60, 30)
     bullets_per_second = 5
-    target_range = 300
+    target_range = 600
     ProjectileClass = Bullet
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -157,7 +157,7 @@ class LaserCannon(Turret):
     turret_id = 'turret4'
     image_size = (60, 30)
     bullets_per_second = 10
-    target_range = 350
+    target_range = 700
     ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):

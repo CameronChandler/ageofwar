@@ -14,7 +14,7 @@ health_ratios = [23.0, 33.0, 56.0] # Minions 1, 2, 3
 damage_ratios = [ 8.1, 11.1, 17.1] # Minions 1, 2, 3
 
 max_health_bases = [30, 120, 450, 1500]
-cost_bases = [3, 25, 200, 1600]
+cost_bases = [2*i for i in [3, 35, 4000, 45_000]]
 damage_bases = [int(h) + 1 for h in max_health_bases]
 print(f'damage_bases: {damage_bases}')
 
