@@ -11,10 +11,13 @@ with open(CONFIG_NAME, 'r') as file:
 class Minion(GameObject, HealthMixin):
     inflate_pixels = 30
     speed = 150
+    reward_cash_multiplier = 1.3
+    attack_interval = 0.5
 
     def __init__(self, x, player):
         '''x, y is the bottom left corner of the image (then adjusted upwards by image height)'''
         self.player = player
+        self.reward_cash = int(self.reward_cash_multiplier * self.cost)
         
         self.image = pygame.image.load(self.image_path)
         self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
@@ -95,8 +98,6 @@ class Minion(GameObject, HealthMixin):
 class Chimp(Minion):
     minion_id = 'minion1'
     image_size = (25, 50)
-    attack_interval = 0.5
-    reward_cash = 2
     training_time = 0.5
 
     def __init__(self, x: float, player: int):
@@ -105,9 +106,6 @@ class Chimp(Minion):
 class Clubman(Minion):
     minion_id = 'minion2'
     image_size = (25, 50)
-    max_health = 15
-    attack_interval = 0.7
-    reward_cash = 5
     training_time = 0.8
 
     def __init__(self, x: float, player: int):
@@ -116,9 +114,6 @@ class Clubman(Minion):
 class Dino(Minion):
     minion_id = 'minion3'
     image_size = (50, 50)
-    max_health = 20
-    attack_interval = 0.9
-    reward_cash = 9
     training_time = 1.5
 
     def __init__(self, x: float, player: int):
@@ -127,9 +122,6 @@ class Dino(Minion):
 class Jester(Minion):
     minion_id = 'minion4'
     image_size = (25, 50)
-    max_health = 30
-    attack_interval = 0.5
-    reward_cash = 15
     training_time = 1.5
 
     def __init__(self, x: float, player: int):
@@ -138,9 +130,6 @@ class Jester(Minion):
 class Knight(Minion):
     minion_id = 'minion5'
     image_size = (25, 50)
-    max_health = 50
-    attack_interval = 0.7
-    reward_cash = 25
     training_time = 2
 
     def __init__(self, x: float, player: int):
@@ -149,9 +138,6 @@ class Knight(Minion):
 class Horse(Minion):
     minion_id = 'minion6'
     image_size = (25, 50)
-    max_health = 80
-    attack_interval = 0.9
-    reward_cash = 50
     training_time = 2.5
 
     def __init__(self, x: float, player: int):
@@ -160,9 +146,6 @@ class Horse(Minion):
 class Soldier(Minion):
     minion_id = 'minion7'
     image_size = (25, 50)
-    max_health = 120
-    attack_interval = 0.4
-    reward_cash = 80
     training_time = 2.5
 
     def __init__(self, x: float, player: int):
@@ -171,9 +154,6 @@ class Soldier(Minion):
 class Rambo(Minion):
     minion_id = 'minion8'
     image_size = (25, 50)
-    max_health = 150
-    attack_interval = 0.6
-    reward_cash = 120
     training_time = 3
 
     def __init__(self, x: float, player: int):
@@ -182,9 +162,6 @@ class Rambo(Minion):
 class Tank(Minion):
     minion_id = 'minion9'
     image_size = (25, 50)
-    max_health = 250
-    attack_interval = 1.0
-    reward_cash = 180
     training_time = 3.5
 
     def __init__(self, x: float, player: int):
@@ -193,9 +170,6 @@ class Tank(Minion):
 class Alien(Minion):
     minion_id = 'minion10'
     image_size = (25, 50)
-    max_health = 300
-    attack_interval = 0.4
-    reward_cash = 250
     training_time = 3.5
 
     def __init__(self, x: float, player: int):
@@ -204,9 +178,6 @@ class Alien(Minion):
 class Robot(Minion):
     minion_id = 'minion11'
     image_size = (25, 50)
-    max_health = 500
-    attack_interval = 0.2
-    reward_cash = 350
     training_time = 4
 
     def __init__(self, x: float, player: int):
@@ -215,9 +186,6 @@ class Robot(Minion):
 class UFO(Minion):
     minion_id = 'minion12'
     image_size = (25, 50)
-    max_health = 1000
-    attack_interval = 0.1
-    reward_cash = 500
     training_time = 5
 
     def __init__(self, x: float, player: int):
