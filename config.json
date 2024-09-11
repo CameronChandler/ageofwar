@@ -47,9 +47,9 @@
         "minion12": {"max_health": 3652, "damage": 1115, "cost": 88400, "reward_xp": 88400}
     },
     "turret_stats": {
-        "turret1": {"cost":   50, "dps":  11},
-        "turret2": {"cost":  250, "dps":  41},
-        "turret3": {"cost": 1250, "dps": 151},
-        "turret4": {"cost": 6000, "dps": 501}
+        "turret1": {"cost":     50, "dps":  11},
+        "turret2": {"cost":    250, "dps":  41},
+        "turret3": {"cost":  20000, "dps": 151},
+        "turret4": {"cost": 200000, "dps": 501}
     }
 }

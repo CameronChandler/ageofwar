@@ -96,7 +96,7 @@ class PowerRock(Projectile):
 
 class PowerArrow(Projectile):
     image_path = config['image']['power2']
-    image_size = (20, 50)
+    image_size = (40, 10)
     speed = 800
     damage = 100_000_000_000
 
@@ -118,7 +118,7 @@ class PowerBomb(Projectile):
 
 class PowerLaser(Projectile):
     image_path = config['image']['power4']
-    image_size = (10, 50)
+    image_size = (50, 10)
     speed = 1500
     damage = 100_000_000_000
 

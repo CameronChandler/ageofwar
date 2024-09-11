@@ -99,7 +99,6 @@ class Spawner:
         return a + (value * (b - a))
 
     def spawn(self, object_manager):
-        print(self.num_spawned, self.xs)
         x = self.scale(self.xs[self.num_spawned], self.min_range, self.max_range)
         projectile = self.ProjectileClass(x, self.player)
         object_manager.add_object(projectile)
@@ -125,7 +124,7 @@ class ArrowSpawner(Spawner):
 
 class BombSpawner(Spawner):
     ProjectileClass = PowerBomb
-    num_projectiles = 15
+    num_projectiles = 20
 
     def __init__(self, player: int, min_range: int, max_range: int):
         super().__init__(player, min_range, max_range)
@@ -133,7 +132,7 @@ class BombSpawner(Spawner):
 
 class LaserSpawner(Spawner):
     ProjectileClass = PowerLaser
-    num_projectiles = 20
+    num_projectiles = 30
 
     def __init__(self, player: int, min_range: int, max_range: int):
         super().__init__(player, min_range, max_range)
@@ -148,6 +147,10 @@ class PowerManager:
         self.active_spawners = {1: None, 2: None}
         self.min_range = min_range
         self.max_range = max_range
+
+    @property
+    def ready_status(self):
+        return {p: self.time_to_power[p] <= 0 for p in (1, 2)}
 
     def try_spawn_power(self, SpawnerClass, player: int):
         if self.time_to_power[player] < 0:
@@ -173,5 +176,8 @@ class PowerManager:
                     self.active_spawners[player] = None
 
             self.time_to_power[player] -= object_manager.delta
+
+            # This is probably the worst code in the repo:
+            object_manager.bases[player].power_ready = self.ready_status[player]
 
         

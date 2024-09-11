@@ -61,7 +61,7 @@ class ActionBox:
     padding = 30
     line_width = 4
     
-    def __init__(self, x, y, action, player):
+    def __init__(self, x, y, action: BoxAction, player):
         self.x = x
         self.y = y
         self.action = action
@@ -76,6 +76,8 @@ class ActionBox:
             return Color.YELLOW if base.can_upgrade_turret(1) else Color.WHITE
         if self.action == BoxAction.TURRET_2:
             return Color.YELLOW if base.can_upgrade_turret(2) else Color.WHITE
+        if self.action == BoxAction.POWER:
+            return Color.YELLOW if base.power_ready else Color.WHITE
         return Color.WHITE
     
     def get_text(self, base) -> str:

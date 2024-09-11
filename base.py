@@ -56,6 +56,8 @@ class Base(GameObject, HealthMixin):
         if self.player == 1:
             self.turret_x += self.image_size[0]
         self.turret_y = {1: self.y - 100, 2: self.y - 50}
+        
+        self.power_ready = False
 
         super().__init__()
 
