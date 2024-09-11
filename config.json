@@ -25,7 +25,11 @@
         "projectile1": "./assets/projectile1.png",
         "projectile2": "./assets/projectile1.png",
         "projectile3": "./assets/projectile1.png",
-        "projectile4": "./assets/projectile1.png"
+        "projectile4": "./assets/projectile1.png",
+        "power1": "./assets/projectile1.png",
+        "power2": "./assets/projectile1.png",
+        "power3": "./assets/projectile1.png",
+        "power4": "./assets/projectile1.png"
     },
     "evolution_costs": [200, 2000, 15000],
     "minion_stats": {

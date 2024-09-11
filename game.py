@@ -5,12 +5,14 @@ from game_object import HealthMixin
 from ui import UI
 from constants import BoxAction, CONFIG_NAME
 from territory import TerritoryManager
+from power import PowerManager
 
 with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 DEBUG = config['debug']
 
+GROUND_Y = config['screen_height'] - config['ground_height'] 
 
 class ObjectManager:
     
@@ -33,8 +35,9 @@ class ObjectManager:
         self.objects.append(obj)
 
     def remove_object(self, obj):
-        self.objects.remove(obj)
-        del obj
+        if obj in self.objects:
+            self.objects.remove(obj)
+            del obj
 
     def handle_ui_selections(self, ui_selections: list[tuple[int, BoxAction]]):
         for player, action in ui_selections:
@@ -51,7 +54,7 @@ class ObjectManager:
         threshold = 500  # Pixels off-screen threshold
         return (
             obj.x < -threshold or obj.x > config['screen_width']  + threshold or
-            obj.y < -threshold or obj.y > config['screen_height'] + threshold
+            obj.y < -threshold or obj.y > GROUND_Y
         )
 
     def update(self, pressed_keys: set, ui_selections: list[tuple[int, BoxAction]]):
@@ -112,6 +115,11 @@ class Game:
         self.ui = UI(self.bases, self.screen)
         self.territory_manager = TerritoryManager(self.bases[1].front_x, self.bases[2].front_x)
 
+        offset = 100
+        min_range = self.bases[1].front_x + offset
+        max_range = self.bases[2].front_x - offset
+        self.power_manager = PowerManager(min_range, max_range)
+
     def run(self):
         running = True
         while running:
@@ -133,6 +141,8 @@ class Game:
 
             self.territory_manager.update(self.object_manager)
             self.territory_manager.draw(self.screen)
+
+            self.power_manager.update(ui_selections, self.object_manager)
 
             pygame.display.flip()
 

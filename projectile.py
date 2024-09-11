@@ -8,9 +8,8 @@ with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 class Projectile(GameObject):
-    def __init__(self, x, y, angle, player, damage):
+    def __init__(self, x, y, angle, player):
         self.x, self.y, self.angle, self.player = x, y, angle, player
-        self.damage = damage
 
         self.image = pygame.image.load(self.image_path)
         self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
@@ -53,7 +52,8 @@ class Egg(Projectile):
     image_size = (7, 10)
     speed = 200
 
-    def __init__(self, x: float, y: float, angle: float, player: int):
+    def __init__(self, x: float, y: float, angle: float, player: int, damage: int):
+        self.damage = damage
         super().__init__(x, y, angle, player)
 
 class Arrow(Projectile):
@@ -61,7 +61,8 @@ class Arrow(Projectile):
     image_size = (8, 2)
     speed = 400
 
-    def __init__(self, x: float, y: float, angle: float, player: int):
+    def __init__(self, x: float, y: float, angle: float, player: int, damage: int):
+        self.damage = damage
         super().__init__(x, y, angle, player)
 
 class Bullet(Projectile):
@@ -69,7 +70,8 @@ class Bullet(Projectile):
     image_size = (6, 2)
     speed = 600
 
-    def __init__(self, x: float, y: float, angle: float, player: int):
+    def __init__(self, x: float, y: float, angle: float, player: int, damage: int):
+        self.damage = damage
         super().__init__(x, y, angle, player)
 
 class Laser(Projectile):
@@ -77,5 +79,50 @@ class Laser(Projectile):
     image_size = (10, 3)
     speed = 1000
 
-    def __init__(self, x: float, y: float, angle: float, player: int):
+    def __init__(self, x: float, y: float, angle: float, player: int, damage: int):
+        self.damage = damage
+        super().__init__(x, y, angle, player)
+
+class PowerRock(Projectile):
+    image_path = config['image']['power1']
+    image_size = (50, 50)
+    speed = 400
+    damage = 100_000_000_000
+
+    def __init__(self, x: float, player: int):
+        y = -10
+        angle = 90
+        super().__init__(x, y, angle, player)
+
+class PowerArrow(Projectile):
+    image_path = config['image']['power2']
+    image_size = (20, 50)
+    speed = 800
+    damage = 100_000_000_000
+
+    def __init__(self, x: float, player: int):
+        y = -10
+        angle = 90
+        super().__init__(x, y, angle, player)
+
+class PowerBomb(Projectile):
+    image_path = config['image']['power3']
+    image_size = (30, 30)
+    speed = 1000
+    damage = 100_000_000_000
+
+    def __init__(self, x: float, player: int):
+        y = -10
+        angle = 90
+        super().__init__(x, y, angle, player)
+
+class PowerLaser(Projectile):
+    image_path = config['image']['power4']
+    image_size = (10, 50)
+    speed = 1500
+    damage = 100_000_000_000
+
+    def __init__(self, x: float, player: int):
+        y = -10
+        angle = 90
         super().__init__(x, y, angle, player)
