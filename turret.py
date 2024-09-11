@@ -70,10 +70,16 @@ class Turret(GameObject):
                     nearest_enemy = obj
 
         return nearest_enemy
+    
+    @property
+    def damage(self):
+        return self.dps / self.bullets_per_second
 
     def shoot(self, object_manager):
         muzzle_x, muzzle_y = self.muzzle_position
-        object_manager.add_object(self.ProjectileClass(muzzle_x, muzzle_y, self.angle, self.player))
+        object_manager.add_object(self.ProjectileClass(
+            muzzle_x, muzzle_y, self.angle, self.player, self.damage
+        ))
 
     def rotate_toward(self, target, delta):
         """Rotate the turret to point at the target and return the updated angle."""
@@ -118,6 +124,7 @@ class Turret(GameObject):
         """Load static attributes for a specific minion type from the config."""
         cls.image_path = config['image'][cls.turret_id]
         cls.cost       = config['turret_stats'][cls.turret_id]['cost']
+        cls.dps        = config['turret_stats'][cls.turret_id]['dps']
 
 class EggLauncher(Turret):
     rotational_velocity = 60 # degrees/second

@@ -8,8 +8,9 @@ with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
 
 class Projectile(GameObject):
-    def __init__(self, x, y, angle, player):
+    def __init__(self, x, y, angle, player, damage):
         self.x, self.y, self.angle, self.player = x, y, angle, player
+        self.damage = damage
 
         self.image = pygame.image.load(self.image_path)
         self.image = pygame.transform.scale(self.image, (self.image_size[0], self.image_size[1]))
@@ -51,7 +52,6 @@ class Egg(Projectile):
     image_path = config['image']['projectile1']
     image_size = (7, 10)
     speed = 200
-    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)
@@ -60,7 +60,6 @@ class Arrow(Projectile):
     image_path = config['image']['projectile2']
     image_size = (8, 2)
     speed = 400
-    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)
@@ -69,7 +68,6 @@ class Bullet(Projectile):
     image_path = config['image']['projectile3']
     image_size = (6, 2)
     speed = 600
-    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)
@@ -78,7 +76,6 @@ class Laser(Projectile):
     image_path = config['image']['projectile4']
     image_size = (10, 3)
     speed = 1000
-    damage = 10
 
     def __init__(self, x: float, y: float, angle: float, player: int):
         super().__init__(x, y, angle, player)

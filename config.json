@@ -27,25 +27,25 @@
         "projectile3": "./assets/projectile1.png",
         "projectile4": "./assets/projectile1.png"
     },
-    "evolution_costs": [200, 1200, 7300],
+    "evolution_costs": [200, 2000, 15000],
     "minion_stats": {
-        "minion1" : {"max_health":   30, "damage":   10, "cost":      6, "reward_xp":      6},
-        "minion2" : {"max_health":   43, "damage":   14, "cost":     10, "reward_xp":     10},
-        "minion3" : {"max_health":   73, "damage":   22, "cost":     40, "reward_xp":     40},
-        "minion4" : {"max_health":  120, "damage":   42, "cost":     70, "reward_xp":     70},
-        "minion5" : {"max_health":  172, "damage":   57, "cost":    120, "reward_xp":    120},
-        "minion6" : {"max_health":  292, "damage":   89, "cost":    480, "reward_xp":    480},
-        "minion7" : {"max_health":  450, "damage":  158, "cost":   8000, "reward_xp":   8000},
-        "minion8" : {"max_health":  645, "damage":  217, "cost":  13600, "reward_xp":  13600},
-        "minion9" : {"max_health": 1095, "damage":  334, "cost":  54400, "reward_xp":  54400},
-        "minion10": {"max_health": 1500, "damage":  528, "cost":  90000, "reward_xp":  90000},
-        "minion11": {"max_health": 2152, "damage":  723, "cost": 153000, "reward_xp": 153000},
-        "minion12": {"max_health": 3652, "damage": 1115, "cost": 612000, "reward_xp": 612000}
+        "minion1" : {"max_health":   30, "damage":   10, "cost":     6, "reward_xp":     6},
+        "minion2" : {"max_health":   43, "damage":   14, "cost":    10, "reward_xp":    10},
+        "minion3" : {"max_health":   73, "damage":   22, "cost":    40, "reward_xp":    40},
+        "minion4" : {"max_health":  120, "damage":   42, "cost":    70, "reward_xp":    70},
+        "minion5" : {"max_health":  172, "damage":   57, "cost":   119, "reward_xp":   119},
+        "minion6" : {"max_health":  292, "damage":   89, "cost":   476, "reward_xp":   476},
+        "minion7" : {"max_health":  450, "damage":  158, "cost":  1000, "reward_xp":  1000},
+        "minion8" : {"max_health":  645, "damage":  217, "cost":  1700, "reward_xp":  1700},
+        "minion9" : {"max_health": 1095, "damage":  334, "cost":  6800, "reward_xp":  6800},
+        "minion10": {"max_health": 1500, "damage":  528, "cost": 13000, "reward_xp": 13000},
+        "minion11": {"max_health": 2152, "damage":  723, "cost": 22100, "reward_xp": 22100},
+        "minion12": {"max_health": 3652, "damage": 1115, "cost": 88400, "reward_xp": 88400}
     },
     "turret_stats": {
-        "turret1": {"cost": 50},
-        "turret2": {"cost": 250},
-        "turret3": {"cost": 1250},
-        "turret4": {"cost": 6000}
+        "turret1": {"cost":   50, "dps":  11},
+        "turret2": {"cost":  250, "dps":  41},
+        "turret3": {"cost": 1250, "dps": 151},
+        "turret4": {"cost": 6000, "dps": 501}
     }
 }
