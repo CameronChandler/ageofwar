@@ -131,7 +131,7 @@ class EggLauncher(Turret):
     turret_id = 'turret1'
     image_size = (60, 30)
     bullets_per_second = 0.5
-    target_range = 400
+    target_range = 450
     ProjectileClass = Egg
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -142,7 +142,7 @@ class Crossbow(Turret):
     turret_id = 'turret2'
     image_size = (60, 30)
     bullets_per_second = 1
-    target_range = 500
+    target_range = 550
     ProjectileClass = Arrow
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -153,7 +153,7 @@ class MachineGun(Turret):
     turret_id = 'turret3'
     image_size = (60, 30)
     bullets_per_second = 5
-    target_range = 600
+    target_range = 650
     ProjectileClass = Bullet
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -164,7 +164,7 @@ class LaserCannon(Turret):
     turret_id = 'turret4'
     image_size = (60, 30)
     bullets_per_second = 10
-    target_range = 700
+    target_range = 750
     ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
