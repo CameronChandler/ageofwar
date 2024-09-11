@@ -43,7 +43,7 @@ class HealthMixin:
         bar_width = self.rect.width
         bar_height = 5
         health_ratio = self.health / self.max_health
-        green_width = int(bar_width * health_ratio)
+        green_width = max(0, int(bar_width * health_ratio))
 
         bar_x = self.x
         bar_y = self.y - 10  # 10 pixels above the object
