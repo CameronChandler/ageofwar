@@ -70,16 +70,22 @@ class Turret(GameObject):
                     nearest_enemy = obj
 
         return nearest_enemy
+    
+    @property
+    def damage(self):
+        return self.dps / self.bullets_per_second
 
     def shoot(self, object_manager):
         muzzle_x, muzzle_y = self.muzzle_position
-        object_manager.add_object(self.ProjectileClass(muzzle_x, muzzle_y, self.angle, self.player))
+        object_manager.add_object(self.ProjectileClass(
+            muzzle_x, muzzle_y, self.angle, self.player, self.damage
+        ))
 
     def rotate_toward(self, target, delta):
         """Rotate the turret to point at the target and return the updated angle."""
         # Calculate the angle to the target in degrees
         dx = target.x - self.x
-        dy = target.y - self.y
+        dy = target.y - self.y + 7 # Aim a bit below target's center
         desired_angle = degrees(atan2(dy, dx))
 
         # Calculate the difference between the current angle and the target angle
@@ -118,13 +124,14 @@ class Turret(GameObject):
         """Load static attributes for a specific minion type from the config."""
         cls.image_path = config['image'][cls.turret_id]
         cls.cost       = config['turret_stats'][cls.turret_id]['cost']
+        cls.dps        = config['turret_stats'][cls.turret_id]['dps']
 
 class EggLauncher(Turret):
     rotational_velocity = 60 # degrees/second
     turret_id = 'turret1'
     image_size = (60, 30)
     bullets_per_second = 0.5
-    target_range = 200
+    target_range = 450
     ProjectileClass = Egg
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -135,7 +142,7 @@ class Crossbow(Turret):
     turret_id = 'turret2'
     image_size = (60, 30)
     bullets_per_second = 1
-    target_range = 250
+    target_range = 550
     ProjectileClass = Arrow
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -146,7 +153,7 @@ class MachineGun(Turret):
     turret_id = 'turret3'
     image_size = (60, 30)
     bullets_per_second = 5
-    target_range = 300
+    target_range = 650
     ProjectileClass = Bullet
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):
@@ -157,7 +164,7 @@ class LaserCannon(Turret):
     turret_id = 'turret4'
     image_size = (60, 30)
     bullets_per_second = 10
-    target_range = 350
+    target_range = 750
     ProjectileClass = Laser
 
     def __init__(self, x: float, y: float, player: int, angle: int = 0):

@@ -30,7 +30,7 @@ class Base(GameObject, HealthMixin):
     reward_cash = 1e6
     offset = 10
     image_size = (100, 100)
-    max_health = 100
+    max_health = 1000
 
     def __init__(self, player):
         self.player = player
@@ -155,9 +155,11 @@ class Base(GameObject, HealthMixin):
             del self.turrets[turret]
             self.turrets[turret] = NewTurretClass(self.turret_x, self.turret_y[turret], self.player, angle)
 
+
 class P1Base(Base):
     def __init__(self):
         super().__init__(player=1)
+
 
 class P2Base(Base):
     def __init__(self):

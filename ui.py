@@ -55,6 +55,7 @@ class MinionBox:
         color = Color.YELLOW if base.budget >= MinionClass.cost else Color.GREY
         self.draw_price(screen, MinionClass.cost, color)
 
+
 class ActionBox:
     size = 80
     padding = 30
@@ -103,13 +104,12 @@ class ActionBox:
             action_rect = action_text.get_rect(center=(self.rect.centerx, y_pos))
             screen.blit(action_text, action_rect)
 
+
 class UI:
 
-    def __init__(self, bases, screen, screen_width, screen_height):
+    def __init__(self, bases, screen):
         self.bases = bases
         self.screen = screen
-        self.screen_width  = screen_width
-        self.screen_height = screen_height
 
         self.font = pygame.font.Font(None, 36)
 
@@ -124,8 +124,8 @@ class UI:
             [ActionBox(x1, y1, BoxAction.EVOLVE, player=1),  ActionBox(x2, y1, BoxAction.TURRET_1, player=1)],
             [ActionBox(x1, y2, BoxAction.POWER , player=1),  ActionBox(x2, y2, BoxAction.TURRET_2, player=1)]
         ]
-        x1 = self.screen_width - 2*(ActionBox.padding + ActionBox.size)
-        x2 = self.screen_width - ActionBox.padding - ActionBox.size
+        x1 = config['screen_width'] - 2*(ActionBox.padding + ActionBox.size)
+        x2 = config['screen_width'] - ActionBox.padding - ActionBox.size
         self.action_boxes_p2 = [
             [ActionBox(x1, y1, BoxAction.EVOLVE, player=2), ActionBox(x2, y1, BoxAction.TURRET_1, player=2)],
             [ActionBox(x1, y2, BoxAction.POWER , player=2), ActionBox(x2, y2, BoxAction.TURRET_2, player=2)]
@@ -143,7 +143,10 @@ class UI:
         xs = [x + i*unit_width for i in range(num_minion_choices)]
         self.minion_boxes_p1 = [MinionBox(xs[i], y, player=1) for i in range(num_minion_choices)]
 
-        xs = [self.screen_width - x - (num_minion_choices - 2 + i)*unit_width for i in range(num_minion_choices)]
+        xs = [
+            config['screen_width'] - x - (num_minion_choices - 2 + i)*unit_width 
+            for i in range(num_minion_choices)
+        ][::-1]
         self.minion_boxes_p2 = [MinionBox(xs[i], y, player=2) for i in range(num_minion_choices)]
 
     def draw_action_boxes(self):
@@ -202,7 +205,7 @@ class UI:
         self.screen.blit(budget_text_p1, (x_pos, 10))
 
         budget_text_p2 = self.font.render(f'Budget: ${self.bases[2].budget}', True, Color.WHITE)
-        text_rect = budget_text_p2.get_rect(topright=(self.screen_width - x_pos, 10))
+        text_rect = budget_text_p2.get_rect(topright=(config['screen_width'] - x_pos, 10))
         self.screen.blit(budget_text_p2, text_rect)
 
     def draw_xp(self):
@@ -211,7 +214,7 @@ class UI:
         self.screen.blit(xp_text_p1, (x_pos, 10))
 
         xp_text_p2 = self.font.render(f'XP: {self.bases[2].xp}', True, Color.WHITE)
-        text_rect = xp_text_p2.get_rect(topright=(self.screen_width - x_pos, 10))
+        text_rect = xp_text_p2.get_rect(topright=(config['screen_width'] - x_pos, 10))
         self.screen.blit(xp_text_p2, text_rect)
 
     def draw_training_queue(self, queue_length, queue_progress, x, y, total_length, height):
@@ -237,7 +240,7 @@ class UI:
         p1_x = 10
         p1_y = 50 
 
-        p2_x = self.screen_width - total_length - 10
+        p2_x = config['screen_width'] - total_length - 10
         p2_y = 50
 
         queue_length, queue_progress = self.bases[1].get_training_queue_status()

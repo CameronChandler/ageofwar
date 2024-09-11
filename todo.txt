@@ -45,3 +45,6 @@ Rock paper scissors with fire/water/grass?
 
 Capture ground to incentivise spawning/pushing
 - Gain xp & $ - exponentially more with passing time
+- Line needs to make dollar amount spawn
+
+### Specify turret & minion damage in DPS
