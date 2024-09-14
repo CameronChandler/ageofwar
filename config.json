@@ -31,7 +31,7 @@
         "power3": "./assets/projectile1.png",
         "power4": "./assets/projectile1.png"
     },
-    "evolution_costs": [200, 2000, 25000],
+    "evolution_costs": [300, 3000, 55000],
     "minion_stats": {
         "minion1" : {"max_health":   30, "damage":   10, "cost":     9, "reward_xp":     6},
         "minion2" : {"max_health":   43, "damage":   14, "cost":    15, "reward_xp":    10},

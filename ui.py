@@ -1,6 +1,7 @@
 import pygame
 from constants import Color, BoxAction, P1_KEYS, P2_KEYS, CONFIG_NAME
 import json
+from typing import Union
 
 with open(CONFIG_NAME, 'r') as file:
     config = json.load(file)
@@ -200,22 +201,29 @@ class UI:
             ui_selections.append((box.player, box.action))
 
         return ui_selections
+    
+    def format_numbers(self, num: Union[int, float]) -> str:
+        ''' Converts num into a shorter value if necessary '''
+        if num >= 1000:
+            num /= 1000
+            return str(int(num)) + 'k'
+        return str(int(num))
 
     def draw_budget(self):
         x_pos = 50
-        budget_text_p1 = self.font.render(f'Budget: ${self.bases[1].budget}', True, Color.WHITE)
+        budget_text_p1 = self.font.render(f'Budget: ${self.format_numbers(self.bases[1].budget)}', True, Color.WHITE)
         self.screen.blit(budget_text_p1, (x_pos, 10))
 
-        budget_text_p2 = self.font.render(f'Budget: ${self.bases[2].budget}', True, Color.WHITE)
+        budget_text_p2 = self.font.render(f'Budget: ${self.format_numbers(self.bases[2].budget)}', True, Color.WHITE)
         text_rect = budget_text_p2.get_rect(topright=(config['screen_width'] - x_pos, 10))
         self.screen.blit(budget_text_p2, text_rect)
 
     def draw_xp(self):
         x_pos = 250
-        xp_text_p1 = self.font.render(f'XP: {self.bases[1].xp}', True, Color.WHITE)
+        xp_text_p1 = self.font.render(f'XP: {self.format_numbers(self.bases[1].xp)}', True, Color.WHITE)
         self.screen.blit(xp_text_p1, (x_pos, 10))
 
-        xp_text_p2 = self.font.render(f'XP: {self.bases[2].xp}', True, Color.WHITE)
+        xp_text_p2 = self.font.render(f'XP: {self.format_numbers(self.bases[2].xp)}', True, Color.WHITE)
         text_rect = xp_text_p2.get_rect(topright=(config['screen_width'] - x_pos, 10))
         self.screen.blit(xp_text_p2, text_rect)
 

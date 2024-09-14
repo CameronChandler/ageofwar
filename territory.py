@@ -29,14 +29,14 @@ class TerritoryManager:
     @property
     def base_reward(self, a=0.023, b=0.04):
         ''' Reward for owning the whole screen '''
-        return 1.5*(exp(a*self.time_elapsed) + b*self.time_elapsed)
+        return 2*(exp(a*self.time_elapsed) + b*self.time_elapsed)
     
     def reward(self, object_manager):
         for player in (1, 2):
             captured = self.territory[player].get_captured_ground_score()
             prop_captured = captured / self.max_captured
             reward = max(1, int(prop_captured * self.base_reward))
-            object_manager.reward_player(player, xp=0, cash=reward)
+            object_manager.reward_player(player, xp=0.1*reward, cash=reward)
     
     def handle_rewards(self, object_manager):
         self.time_elapsed += object_manager.delta
