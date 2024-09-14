@@ -87,7 +87,7 @@ class PowerRock(Projectile):
     image_path = config['image']['power1']
     image_size = (50, 50)
     speed = 400
-    damage = 100_000_000_000
+    damage = 50
 
     def __init__(self, x: float, player: int):
         y = -10
@@ -98,7 +98,7 @@ class PowerArrow(Projectile):
     image_path = config['image']['power2']
     image_size = (40, 10)
     speed = 800
-    damage = 100_000_000_000
+    damage = 250
 
     def __init__(self, x: float, player: int):
         y = -10
@@ -109,7 +109,7 @@ class PowerBomb(Projectile):
     image_path = config['image']['power3']
     image_size = (30, 30)
     speed = 1000
-    damage = 100_000_000_000
+    damage = 900
 
     def __init__(self, x: float, player: int):
         y = -10
@@ -120,7 +120,7 @@ class PowerLaser(Projectile):
     image_path = config['image']['power4']
     image_size = (50, 10)
     speed = 1500
-    damage = 100_000_000_000
+    damage = 5000
 
     def __init__(self, x: float, player: int):
         y = -10

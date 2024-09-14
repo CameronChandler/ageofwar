@@ -1,7 +1,7 @@
 import pygame
 from enum import Enum
 
-CONFIG_NAME = 'test_config.json'
+CONFIG_NAME = 'config.json'
 
 class ValueEnum(Enum):
     ''' Enums that return the value you assign them '''

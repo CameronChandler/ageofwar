@@ -140,7 +140,7 @@ class LaserSpawner(Spawner):
 
 class PowerManager:
     spawner_choices = [VolcanoSpawner, ArrowSpawner, BombSpawner, LaserSpawner]
-    power_interval = 10
+    power_interval = 30
 
     def __init__(self, min_range: int, max_range: int):
         self.time_to_power = {1: self.power_interval, 2: self.power_interval}

@@ -10,7 +10,7 @@ with open(CONFIG_NAME, 'r') as file:
 
 class Minion(GameObject, HealthMixin):
     inflate_pixels = 30
-    speed = 75
+    speed = 175
     reward_cash_multiplier = 1.3
     attack_interval = 0.5
 
@@ -114,7 +114,7 @@ class Clubman(Minion):
 class Dino(Minion):
     minion_id = 'minion3'
     image_size = (50, 50)
-    training_time = 4
+    training_time = 3.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -130,7 +130,7 @@ class Jester(Minion):
 class Knight(Minion):
     minion_id = 'minion5'
     image_size = (25, 50)
-    training_time = 4
+    training_time = 3.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -138,7 +138,7 @@ class Knight(Minion):
 class Horse(Minion):
     minion_id = 'minion6'
     image_size = (25, 50)
-    training_time = 5
+    training_time = 4
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -146,7 +146,7 @@ class Horse(Minion):
 class Soldier(Minion):
     minion_id = 'minion7'
     image_size = (25, 50)
-    training_time = 4
+    training_time = 3.5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -154,7 +154,7 @@ class Soldier(Minion):
 class Rambo(Minion):
     minion_id = 'minion8'
     image_size = (25, 50)
-    training_time = 5
+    training_time = 4
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -162,7 +162,7 @@ class Rambo(Minion):
 class Tank(Minion):
     minion_id = 'minion9'
     image_size = (25, 50)
-    training_time = 6
+    training_time = 5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -170,7 +170,7 @@ class Tank(Minion):
 class Alien(Minion):
     minion_id = 'minion10'
     image_size = (25, 50)
-    training_time = 5
+    training_time = 4
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -178,7 +178,7 @@ class Alien(Minion):
 class Robot(Minion):
     minion_id = 'minion11'
     image_size = (25, 50)
-    training_time = 6
+    training_time = 5
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
@@ -186,7 +186,7 @@ class Robot(Minion):
 class UFO(Minion):
     minion_id = 'minion12'
     image_size = (25, 50)
-    training_time = 8
+    training_time = 6
 
     def __init__(self, x: float, player: int):
         super().__init__(x, player)
