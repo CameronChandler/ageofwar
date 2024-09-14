@@ -69,7 +69,7 @@ class Spawner:
         self.time_to_spawn = self.spawn_interval
 
         min_dist = 1 / (2*self.num_projectiles)
-        self.xs = poisson_disc_1d(min_dist, self.num_projectiles)
+        self.xs = poisson_disc_1d(min_dist, self.num_projectiles+1)
         self.min_range = min_range
         self.max_range = max_range
 
