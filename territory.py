@@ -27,16 +27,16 @@ class TerritoryManager:
         return cos(pi * x / self.reward_interval) ** 150
 
     @property
-    def base_reward(self, a=0.023, b=0.04):
+    def base_reward(self, a=0.023, b=0.05):
         ''' Reward for owning the whole screen '''
-        return exp(a*self.time_elapsed) + b*self.time_elapsed
+        return 3*(exp(a*self.time_elapsed) + b*self.time_elapsed)
     
     def reward(self, object_manager):
         for player in (1, 2):
             captured = self.territory[player].get_captured_ground_score()
             prop_captured = captured / self.max_captured
             reward = max(1, int(prop_captured * self.base_reward))
-            object_manager.reward_player(player, xp=0, cash=reward)
+            object_manager.reward_player(player, xp=0.1*reward, cash=reward)
     
     def handle_rewards(self, object_manager):
         self.time_elapsed += object_manager.delta
@@ -112,10 +112,10 @@ class Territory:
     def draw(self, screen, pulse_strength: float):
         ''' Pulse strength in [0, 1] '''
         if self.player == 1:
-            box = (0, self.y, self.cap_x, self.height)
+            box = (0, self.y, max(0, self.cap_x), self.height)
         else:
             w2 = config['screen_width'] - self.get_captured_ground_score()
-            box = (w2, self.y, self.get_captured_ground_score(), self.height)
+            box = (max(0, w2), self.y, max(0, self.get_captured_ground_score()), self.height)
 
         surface = pygame.Surface((box[2], box[3]), pygame.SRCALPHA)
 

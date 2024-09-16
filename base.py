@@ -22,6 +22,7 @@ CONTROLS = {
 }
 
 EVOLUTION_COST = config['evolution_costs']
+EVOLUTION_MAX_HEALTH = [150, 700, 1500, 20000]
 
 class Base(GameObject, HealthMixin):
     max_queue_length = 5
@@ -30,7 +31,7 @@ class Base(GameObject, HealthMixin):
     reward_cash = 1e6
     offset = 10
     image_size = (100, 100)
-    max_health = 1000
+    max_health = EVOLUTION_MAX_HEALTH[0]
 
     def __init__(self, player):
         self.player = player
@@ -78,6 +79,9 @@ class Base(GameObject, HealthMixin):
     def try_evolve(self):
         if self.can_evolve:
             self.evolution += 1
+            curr_health_prop = self.health / self.max_health
+            self.max_health += EVOLUTION_MAX_HEALTH[self.evolution]
+            self.health     = curr_health_prop * self.max_health
     
     def try_spawn(self, object_manager, minion):
         if self.budget >= minion.cost:

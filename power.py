@@ -69,7 +69,7 @@ class Spawner:
         self.time_to_spawn = self.spawn_interval
 
         min_dist = 1 / (2*self.num_projectiles)
-        self.xs = poisson_disc_1d(min_dist, self.num_projectiles)
+        self.xs = poisson_disc_1d(min_dist, self.num_projectiles+1)
         self.min_range = min_range
         self.max_range = max_range
 
@@ -140,7 +140,7 @@ class LaserSpawner(Spawner):
 
 class PowerManager:
     spawner_choices = [VolcanoSpawner, ArrowSpawner, BombSpawner, LaserSpawner]
-    power_interval = 10
+    power_interval = 30
 
     def __init__(self, min_range: int, max_range: int):
         self.time_to_power = {1: self.power_interval, 2: self.power_interval}
